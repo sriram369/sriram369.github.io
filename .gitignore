@@ -1,3 +1,15 @@
+# Claude Code internals
+.agents/
+.claude/
+skills-lock.json
+
+# Private files
+sriram_portfolio_prd*
+AuraPath_Report.pdf
+forest\ management\ .pdf
+google\ code\ in.pdf
+wildlife.pdf
+
 # Logs
 logs
 *.log

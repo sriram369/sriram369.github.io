@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const journey = [
   { city: 'Hyderabad', flag: '🇮🇳' },
@@ -9,6 +10,8 @@ const journey = [
 ]
 
 export default function Hero() {
+  const isMobile = useIsMobile()
+
   return (
     <section
       id="hero"
@@ -19,7 +22,7 @@ export default function Hero() {
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        padding: '120px 40px 80px',
+        padding: isMobile ? '100px 20px 60px' : '120px 40px 80px',
         background: 'linear-gradient(150deg, #FAFAF8 0%, #F4F1EA 40%, #EAF4F8 100%)',
       }}
     >
@@ -28,7 +31,9 @@ export default function Hero() {
         className="animate-pulse-slow"
         style={{
           position: 'absolute', top: '10%', right: '8%',
-          width: '520px', height: '520px', borderRadius: '50%',
+          width: isMobile ? '280px' : '520px',
+          height: isMobile ? '280px' : '520px',
+          borderRadius: '50%',
           background: 'radial-gradient(ellipse, rgba(8,145,178,0.10) 0%, transparent 65%)',
           pointerEvents: 'none',
         }}
@@ -37,7 +42,9 @@ export default function Hero() {
         className="animate-float-slow"
         style={{
           position: 'absolute', bottom: '15%', left: '3%',
-          width: '380px', height: '380px', borderRadius: '50%',
+          width: isMobile ? '200px' : '380px',
+          height: isMobile ? '200px' : '380px',
+          borderRadius: '50%',
           background: 'radial-gradient(ellipse, rgba(196,147,63,0.08) 0%, transparent 65%)',
           pointerEvents: 'none',
         }}
@@ -48,7 +55,7 @@ export default function Hero() {
         className="font-display"
         style={{
           position: 'absolute', top: '-4%', right: '0%',
-          fontSize: 'clamp(220px, 28vw, 480px)',
+          fontSize: 'clamp(140px, 28vw, 480px)',
           fontWeight: 700, lineHeight: 1,
           color: 'rgba(17,18,24,0.028)',
           pointerEvents: 'none', userSelect: 'none',
@@ -58,25 +65,29 @@ export default function Hero() {
         S
       </div>
 
-      {/* Floating decorative ring */}
-      <div
-        className="animate-float-reverse"
-        style={{
-          position: 'absolute', top: '20%', right: '18%',
-          width: '120px', height: '120px', borderRadius: '50%',
-          border: '1.5px solid rgba(8,145,178,0.18)',
-          pointerEvents: 'none',
-        }}
-      />
-      <div
-        className="animate-float"
-        style={{
-          position: 'absolute', top: '35%', right: '25%',
-          width: '48px', height: '48px', borderRadius: '50%',
-          border: '1.5px solid rgba(196,147,63,0.22)',
-          pointerEvents: 'none',
-        }}
-      />
+      {/* Floating decorative rings — hidden on mobile */}
+      {!isMobile && (
+        <>
+          <div
+            className="animate-float-reverse"
+            style={{
+              position: 'absolute', top: '20%', right: '18%',
+              width: '120px', height: '120px', borderRadius: '50%',
+              border: '1.5px solid rgba(8,145,178,0.18)',
+              pointerEvents: 'none',
+            }}
+          />
+          <div
+            className="animate-float"
+            style={{
+              position: 'absolute', top: '35%', right: '25%',
+              width: '48px', height: '48px', borderRadius: '50%',
+              border: '1.5px solid rgba(196,147,63,0.22)',
+              pointerEvents: 'none',
+            }}
+          />
+        </>
+      )}
 
       {/* Content */}
       <div style={{ maxWidth: '960px', position: 'relative', zIndex: 1 }}>
@@ -88,12 +99,12 @@ export default function Hero() {
           transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="font-display"
           style={{
-            fontSize: 'clamp(56px, 9vw, 120px)',
+            fontSize: 'clamp(48px, 9vw, 120px)',
             fontWeight: 600,
             lineHeight: 0.92,
             letterSpacing: '-0.03em',
             color: '#111218',
-            marginBottom: '28px',
+            marginBottom: '24px',
           }}
         >
           Sriram<br />
@@ -106,12 +117,12 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           style={{
-            fontSize: 'clamp(17px, 2vw, 21px)',
+            fontSize: 'clamp(15px, 2vw, 21px)',
             fontWeight: 400,
             color: '#4B5563',
             lineHeight: 1.55,
             maxWidth: '500px',
-            marginBottom: '44px',
+            marginBottom: '36px',
             letterSpacing: '-0.01em',
           }}
         >
@@ -123,7 +134,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.55 }}
-          style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '72px' }}
+          style={{
+            display: 'flex',
+            gap: '10px',
+            flexWrap: 'wrap',
+            marginBottom: isMobile ? '48px' : '72px',
+          }}
         >
           <CTAButton href="#projects" variant="primary">View Projects</CTAButton>
           <CTAButton href="#contact" variant="teal">Get in Touch</CTAButton>
@@ -141,11 +157,11 @@ export default function Hero() {
             <span key={stop.city} style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: '5px',
-                padding: '5px 13px',
+                padding: '5px 10px',
                 background: stop.current ? '#111218' : 'transparent',
                 color: stop.current ? '#FAFAF8' : '#374151',
                 borderRadius: '100px',
-                fontSize: '12px',
+                fontSize: isMobile ? '11px' : '12px',
                 fontWeight: stop.current ? 600 : 400,
                 letterSpacing: '0.02em',
                 border: stop.current ? 'none' : '1px solid transparent',
@@ -188,7 +204,7 @@ export default function Hero() {
 function CTAButton({ href, variant, children }) {
   const base = {
     display: 'inline-flex', alignItems: 'center',
-    padding: '13px 30px',
+    padding: '11px 24px',
     borderRadius: '8px',
     fontSize: '14px', fontWeight: 500,
     textDecoration: 'none',

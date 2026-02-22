@@ -148,3 +148,9 @@ input:focus, textarea:focus {
   border-color: #0891B2 !important;
   box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
 }
+
+/* ── Mobile responsive ── */
+@media (max-width: 768px) {
+  .nav-links-desktop { display: none !important; }
+  .nav-hamburger { display: flex !important; }
+}

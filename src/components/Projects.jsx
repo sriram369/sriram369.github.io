@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const projects = [
   {
@@ -92,8 +93,10 @@ const projects = [
 ]
 
 export default function Projects() {
+  const isMobile = useIsMobile()
+
   return (
-    <section id="projects" style={{ padding: '120px 40px', background: '#FAFAF8' }}>
+    <section id="projects" style={{ padding: isMobile ? '80px 20px' : '120px 40px', background: '#FAFAF8' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Header */}
         <motion.div
@@ -101,7 +104,7 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          style={{ marginBottom: '72px' }}
+          style={{ marginBottom: '56px' }}
         >
           <span className="section-label">05 — Projects</span>
           <h2 className="font-display" style={{
@@ -114,8 +117,8 @@ export default function Projects() {
           </h2>
         </motion.div>
 
-        {/* All projects — same dark card style */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+        {/* All projects — dark card style */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {projects.map((project, i) => (
             <motion.div
               key={project.id}
@@ -126,7 +129,7 @@ export default function Projects() {
               style={{
                 background: '#111218',
                 borderRadius: '20px',
-                padding: '40px 48px',
+                padding: isMobile ? '28px 20px' : '40px 48px',
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -154,7 +157,7 @@ export default function Projects() {
                   alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px',
                   marginBottom: '16px',
                 }}>
-                  <div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <span style={{
                       fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em',
                       textTransform: 'uppercase', color: '#0891B2',
@@ -163,7 +166,7 @@ export default function Projects() {
                       {project.origin}
                     </span>
                     <h3 className="font-display" style={{
-                      fontSize: 'clamp(26px, 3vw, 38px)',
+                      fontSize: 'clamp(24px, 3vw, 38px)',
                       fontWeight: 600, color: '#FAFAF8',
                       lineHeight: 1.05, letterSpacing: '-0.03em',
                     }}>
@@ -175,7 +178,7 @@ export default function Projects() {
                   </div>
                   {project.role && (
                     <div style={{
-                      padding: '7px 16px',
+                      padding: '7px 14px',
                       background: 'rgba(8,145,178,0.15)',
                       border: '1px solid rgba(8,145,178,0.3)',
                       borderRadius: '8px',
@@ -215,7 +218,7 @@ export default function Projects() {
                 {/* Quote (AuraPath only) */}
                 {project.quote && (
                   <div style={{
-                    padding: '18px 22px',
+                    padding: '16px 18px',
                     background: 'rgba(8,145,178,0.10)',
                     border: '1px solid rgba(8,145,178,0.2)',
                     borderLeft: '3px solid #0891B2',
@@ -231,7 +234,7 @@ export default function Projects() {
                   </div>
                 )}
 
-                {/* Link / CTA */}
+                {/* Links */}
                 {project.link ? (
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     <a
@@ -240,7 +243,7 @@ export default function Projects() {
                       rel="noopener noreferrer"
                       style={{
                         display: 'inline-flex', alignItems: 'center', gap: '8px',
-                        padding: '10px 22px',
+                        padding: '10px 20px',
                         background: 'rgba(255,255,255,0.08)',
                         border: '1px solid rgba(255,255,255,0.14)',
                         borderRadius: '8px',
@@ -272,7 +275,7 @@ export default function Projects() {
                         rel="noopener noreferrer"
                         style={{
                           display: 'inline-flex', alignItems: 'center', gap: '8px',
-                          padding: '10px 22px',
+                          padding: '10px 20px',
                           background: '#0891B2',
                           border: '1px solid rgba(8,145,178,0.4)',
                           borderRadius: '8px',

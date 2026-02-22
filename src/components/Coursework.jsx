@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const fall2025 = [
   { code: 'BU.120.601', title: 'Business Communication' },
@@ -88,7 +89,7 @@ const vit = [
   },
 ]
 
-function JHUCourseList() {
+function JHUCourseList({ isMobile }) {
   const semesters = [
     { label: 'Fall 2025', status: 'completed', courses: fall2025 },
     { label: 'Spring 2026', status: 'in-progress', courses: spring2026 },
@@ -128,16 +129,18 @@ function JHUCourseList() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1 }}>
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: '11px',
-                  color: '#9CA3AF',
-                  fontWeight: 500,
-                  minWidth: '96px',
-                  letterSpacing: '0.03em',
-                }}>
-                  {course.code}
-                </span>
+                {!isMobile && (
+                  <span style={{
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    color: '#9CA3AF',
+                    fontWeight: 500,
+                    minWidth: '96px',
+                    letterSpacing: '0.03em',
+                  }}>
+                    {course.code}
+                  </span>
+                )}
                 <span style={{ fontSize: '14px', color: '#1F2937', fontWeight: 400, lineHeight: 1.4 }}>
                   {course.title}
                 </span>
@@ -165,7 +168,7 @@ function JHUCourseList() {
   )
 }
 
-function NUSCourseList() {
+function NUSCourseList({ isMobile }) {
   return (
     <div>
       {/* Programme header */}
@@ -228,7 +231,7 @@ function NUSCourseList() {
         border: '1px solid rgba(8,145,178,0.18)',
         borderRadius: '12px',
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
         gap: '16px',
       }}>
         <div>
@@ -389,10 +392,11 @@ const tabs = [
 
 export default function Coursework() {
   const [active, setActive] = useState('jhu')
+  const isMobile = useIsMobile()
 
   return (
     <section id="coursework" style={{
-      padding: '120px 40px',
+      padding: isMobile ? '80px 20px' : '120px 40px',
       background: 'linear-gradient(180deg, #FAFAF8 0%, #F4F1EA 100%)',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -462,13 +466,13 @@ export default function Coursework() {
               background: '#fff',
               border: '1px solid #F0EDE8',
               borderRadius: '16px',
-              padding: '8px 32px',
+              padding: isMobile ? '8px 16px' : '8px 32px',
               boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
             }}
           >
-            {active === 'jhu' && <JHUCourseList />}
+            {active === 'jhu' && <JHUCourseList isMobile={isMobile} />}
             {active === 'vit' && <VITCourseList />}
-            {active === 'nus' && <NUSCourseList />}
+            {active === 'nus' && <NUSCourseList isMobile={isMobile} />}
           </motion.div>
         </AnimatePresence>
       </div>

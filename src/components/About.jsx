@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -8,8 +9,10 @@ const fadeUp = {
 const interests = ['AI & Machine Learning', 'Product Strategy', 'Data Science', 'Computer Vision', 'LLMs', 'Social Media & Content']
 
 export default function About() {
+  const isMobile = useIsMobile()
+
   return (
-    <section id="about" style={{ padding: '120px 40px', background: '#FAFAF8', position: 'relative' }}>
+    <section id="about" style={{ padding: isMobile ? '80px 20px' : '120px 40px', background: '#FAFAF8', position: 'relative' }}>
       {/* Subtle background accent */}
       <div style={{
         position: 'absolute', top: 0, right: 0,
@@ -23,7 +26,7 @@ export default function About() {
         <motion.div
           variants={fadeUp} initial="hidden" whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
-          style={{ marginBottom: '64px' }}
+          style={{ marginBottom: '48px' }}
         >
           <span className="section-label">02 — About</span>
           <h2 className="font-display" style={{
@@ -36,7 +39,12 @@ export default function About() {
           </h2>
         </motion.div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+          gap: isMobile ? '40px' : '80px',
+          alignItems: 'start',
+        }}>
           {/* Left — Bio */}
           <motion.div
             variants={fadeUp} initial="hidden" whileInView="show"
@@ -142,14 +150,14 @@ export default function About() {
 
           {/* Right — Details */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, x: isMobile ? 0 : 24, y: isMobile ? 24 : 0 }}
+            whileInView={{ opacity: 1, x: 0, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           >
             {/* Philosophy */}
             <div style={{
-              padding: '28px 32px',
+              padding: '28px 24px',
               background: '#111218',
               borderRadius: '16px',
               marginBottom: '28px',

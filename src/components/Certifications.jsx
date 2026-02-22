@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const certs = [
   { title: 'Google Code In', issuer: 'Google', date: null, link: '/google-code-in.pdf' },
@@ -14,9 +15,11 @@ const certs = [
 ]
 
 export default function Certifications() {
+  const isMobile = useIsMobile()
+
   return (
     <section id="certifications" style={{
-      padding: '80px 40px',
+      padding: isMobile ? '60px 20px' : '80px 40px',
       background: '#FAFAF8',
     }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -49,7 +52,7 @@ export default function Certifications() {
             background: '#fff',
             border: '1px solid #F0EDE8',
             borderRadius: '16px',
-            padding: '8px 32px',
+            padding: isMobile ? '8px 16px' : '8px 32px',
             boxShadow: '0 2px 16px rgba(0,0,0,0.04)',
           }}
         >
@@ -62,28 +65,43 @@ export default function Certifications() {
               transition={{ duration: 0.35, delay: i * 0.03 }}
               style={{
                 display: 'flex',
-                alignItems: 'center',
+                alignItems: isMobile ? 'flex-start' : 'center',
                 justifyContent: 'space-between',
+                flexDirection: isMobile ? 'column' : 'row',
                 padding: '14px 0',
                 borderBottom: i < certs.length - 1 ? '1px solid #F3F0E8' : 'none',
-                gap: '16px',
+                gap: isMobile ? '10px' : '16px',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
-                <span style={{
-                  fontSize: '11px', fontWeight: 600,
-                  color: '#9CA3AF', letterSpacing: '0.03em',
-                  minWidth: '100px', flexShrink: 0,
-                }}>
-                  {cert.issuer}
-                </span>
-                <span style={{ fontSize: '14px', color: '#1F2937', fontWeight: 400, lineHeight: 1.4 }}>
-                  {cert.title}
-                </span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', flex: 1, minWidth: 0 }}>
+                {!isMobile && (
+                  <span style={{
+                    fontSize: '11px', fontWeight: 600,
+                    color: '#9CA3AF', letterSpacing: '0.03em',
+                    minWidth: '100px', flexShrink: 0,
+                    paddingTop: '2px',
+                  }}>
+                    {cert.issuer}
+                  </span>
+                )}
+                <div style={{ minWidth: 0 }}>
+                  {isMobile && (
+                    <span style={{
+                      fontSize: '11px', fontWeight: 600,
+                      color: '#9CA3AF', letterSpacing: '0.03em',
+                      display: 'block', marginBottom: '3px',
+                    }}>
+                      {cert.issuer}
+                    </span>
+                  )}
+                  <span style={{ fontSize: '14px', color: '#1F2937', fontWeight: 400, lineHeight: 1.4 }}>
+                    {cert.title}
+                  </span>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexShrink: 0 }}>
-                {cert.date && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                {cert.date && !isMobile && (
                   <span style={{ fontSize: '12px', color: '#9CA3AF', whiteSpace: 'nowrap' }}>
                     {cert.date}
                   </span>

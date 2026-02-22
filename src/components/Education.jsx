@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const timeline = [
   {
@@ -41,9 +42,11 @@ const timeline = [
 ]
 
 export default function Education() {
+  const isMobile = useIsMobile()
+
   return (
     <section id="education" style={{
-      padding: '120px 40px',
+      padding: isMobile ? '80px 20px' : '120px 40px',
       background: 'linear-gradient(180deg, #F4F1EA 0%, #FAFAF8 100%)',
       position: 'relative',
     }}>
@@ -54,7 +57,7 @@ export default function Education() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          style={{ marginBottom: '80px' }}
+          style={{ marginBottom: '60px' }}
         >
           <span className="section-label">04 — Education</span>
           <h2 className="font-display" style={{
@@ -76,16 +79,18 @@ export default function Education() {
         {/* Timeline */}
         <div style={{ position: 'relative' }}>
           {/* Vertical line */}
-          <div style={{
-            position: 'absolute',
-            left: '28px',
-            top: '28px',
-            bottom: '28px',
-            width: '1.5px',
-            background: 'linear-gradient(to bottom, #0891B2, rgba(8,145,178,0.1))',
-          }} />
+          {!isMobile && (
+            <div style={{
+              position: 'absolute',
+              left: '28px',
+              top: '28px',
+              bottom: '28px',
+              width: '1.5px',
+              background: 'linear-gradient(to bottom, #0891B2, rgba(8,145,178,0.1))',
+            }} />
+          )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '36px' }}>
             {timeline.map((item, i) => (
               <motion.div
                 key={item.school}
@@ -93,26 +98,27 @@ export default function Education() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                style={{ display: 'flex', gap: '40px', alignItems: 'flex-start' }}
+                style={{ display: 'flex', gap: isMobile ? '0' : '40px', alignItems: 'flex-start' }}
               >
-                {/* Node */}
-                <div style={{
-                  flexShrink: 0, width: '56px',
-                  display: 'flex', justifyContent: 'center', paddingTop: '20px',
-                }}>
+                {/* Node — hidden on mobile */}
+                {!isMobile && (
                   <div style={{
-                    width: '14px', height: '14px', borderRadius: '50%',
-                    background: item.current ? '#0891B2' : '#E5E7EB',
-                    border: `2.5px solid ${item.current ? '#0891B2' : '#D1D5DB'}`,
-                    boxShadow: item.current ? '0 0 0 6px rgba(8,145,178,0.12)' : 'none',
-                    transition: 'all 0.3s',
-                    zIndex: 1, position: 'relative',
-                  }} />
-                </div>
+                    flexShrink: 0, width: '56px',
+                    display: 'flex', justifyContent: 'center', paddingTop: '20px',
+                  }}>
+                    <div style={{
+                      width: '14px', height: '14px', borderRadius: '50%',
+                      background: item.current ? '#0891B2' : '#E5E7EB',
+                      border: `2.5px solid ${item.current ? '#0891B2' : '#D1D5DB'}`,
+                      boxShadow: item.current ? '0 0 0 6px rgba(8,145,178,0.12)' : 'none',
+                      zIndex: 1, position: 'relative',
+                    }} />
+                  </div>
+                )}
 
                 {/* Card */}
                 <div style={{
-                  flex: 1, padding: '28px 32px',
+                  flex: 1, padding: isMobile ? '20px 16px' : '28px 32px',
                   background: item.current ? '#fff' : item.bg,
                   border: `1px solid ${item.current ? 'rgba(8,145,178,0.25)' : item.border}`,
                   borderRadius: '16px',
@@ -122,7 +128,7 @@ export default function Education() {
                 }}>
                   {item.current && (
                     <span style={{
-                      position: 'absolute', top: '20px', right: '20px',
+                      position: 'absolute', top: '16px', right: '16px',
                       padding: '4px 12px',
                       background: 'rgba(8,145,178,0.1)',
                       color: '#0891B2',
@@ -145,10 +151,11 @@ export default function Education() {
 
                   {/* Degree */}
                   <h3 className="font-display" style={{
-                    fontSize: 'clamp(22px, 2.5vw, 28px)',
+                    fontSize: 'clamp(20px, 2.5vw, 28px)',
                     fontWeight: 600, color: '#111218',
                     lineHeight: 1.2, letterSpacing: '-0.02em',
                     marginBottom: '4px',
+                    paddingRight: item.current ? '80px' : '0',
                   }}>
                     {item.degree}
                   </h3>
@@ -162,7 +169,7 @@ export default function Education() {
                   {/* School */}
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
-                    marginBottom: '16px',
+                    marginBottom: '16px', flexWrap: 'wrap',
                   }}>
                     <span style={{ fontSize: '16px' }}>{item.flag}</span>
                     <span style={{ fontSize: '15px', fontWeight: 600, color: '#1F2937' }}>
@@ -173,7 +180,7 @@ export default function Education() {
 
                   {/* Note */}
                   <div style={{
-                    padding: '10px 16px',
+                    padding: '10px 14px',
                     background: `${item.bg}`,
                     border: `1px solid ${item.border}`,
                     borderRadius: '8px',

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const socials = [
   {
@@ -50,9 +51,11 @@ const socials = [
 ]
 
 export default function Contact() {
+  const isMobile = useIsMobile()
+
   return (
     <section id="contact" style={{
-      padding: '120px 40px',
+      padding: isMobile ? '80px 20px' : '120px 40px',
       background: '#111218',
       position: 'relative',
       overflow: 'hidden',
@@ -78,7 +81,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          style={{ marginBottom: '64px', textAlign: 'center' }}
+          style={{ marginBottom: '48px', textAlign: 'center' }}
         >
           <span style={{
             fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em',
@@ -117,10 +120,10 @@ export default function Contact() {
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             gap: '14px',
-            padding: '22px 40px',
+            padding: isMobile ? '18px 24px' : '22px 40px',
             background: '#0891B2',
             borderRadius: '16px',
-            marginBottom: '24px',
+            marginBottom: '16px',
             textDecoration: 'none',
             transition: 'all 0.25s ease',
           }}
@@ -142,7 +145,11 @@ export default function Contact() {
         </motion.a>
 
         {/* Secondary links */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: '12px',
+        }}>
           {socials.slice(1).map((link, i) => (
             <motion.a
               key={link.label}
@@ -155,7 +162,7 @@ export default function Contact() {
               transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
               style={{
                 display: 'flex', alignItems: 'center', gap: '14px',
-                padding: '20px 24px',
+                padding: '18px 20px',
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: '14px',
@@ -165,12 +172,12 @@ export default function Contact() {
               whileHover={{
                 background: 'rgba(8,145,178,0.10)',
                 borderColor: 'rgba(8,145,178,0.25)',
-                x: 4,
+                x: isMobile ? 0 : 4,
               }}
             >
               <span style={{ color: '#0891B2', flexShrink: 0 }}>{link.icon}</span>
-              <div>
-                <div style={{ fontSize: '13px', fontWeight: 600, color: '#E5E7EB', marginBottom: '2px' }}>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#E5E7EB', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {link.handle}
                 </div>
                 <div style={{ fontSize: '12px', color: '#6B7280' }}>{link.sub}</div>

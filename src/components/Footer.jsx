@@ -1,12 +1,17 @@
+import { useIsMobile } from '../hooks/useIsMobile'
+
 export default function Footer() {
+  const isMobile = useIsMobile()
+
   return (
     <footer style={{
       background: '#0D0F18',
       borderTop: '1px solid rgba(255,255,255,0.06)',
-      padding: '32px 40px',
+      padding: isMobile ? '24px 20px' : '32px 40px',
       display: 'flex',
-      alignItems: 'center',
+      alignItems: isMobile ? 'flex-start' : 'center',
       justifyContent: 'space-between',
+      flexDirection: isMobile ? 'column' : 'row',
       flexWrap: 'wrap',
       gap: '16px',
     }}>
@@ -22,11 +27,11 @@ export default function Footer() {
         </span>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
         {['About', 'Education', 'Projects', 'Contact'].map(link => (
           <a
             key={link}
-            href={`#${link.toLowerCase()}`}
+            href={'#' + link.toLowerCase()}
             style={{
               fontSize: '13px', color: '#6B7280',
               textDecoration: 'none', transition: 'color 0.2s',

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const experiences = [
   {
@@ -43,9 +44,11 @@ const experiences = [
 ]
 
 export default function Experience() {
+  const isMobile = useIsMobile()
+
   return (
     <section id="experience" style={{
-      padding: '120px 40px',
+      padding: isMobile ? '80px 20px' : '120px 40px',
       background: 'linear-gradient(180deg, #FAFAF8 0%, #F4F1EA 100%)',
       position: 'relative',
     }}>
@@ -56,7 +59,7 @@ export default function Experience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          style={{ marginBottom: '72px' }}
+          style={{ marginBottom: '56px' }}
         >
           <span className="section-label">03 — Experience</span>
           <h2 className="font-display" style={{
@@ -70,7 +73,7 @@ export default function Experience() {
         </motion.div>
 
         {/* Cards */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {experiences.map((exp, i) => (
             <motion.div
               key={exp.company}
@@ -82,7 +85,7 @@ export default function Experience() {
               style={{
                 background: '#111218',
                 borderRadius: '20px',
-                padding: '40px 48px',
+                padding: isMobile ? '28px 20px' : '40px 48px',
                 position: 'relative',
                 overflow: 'hidden',
                 transition: 'transform 0.3s ease, box-shadow 0.3s ease',
@@ -110,7 +113,7 @@ export default function Experience() {
                   marginBottom: '16px',
                 }}>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
                       {exp.logo && (
                         <img
                           src={exp.logo}
@@ -135,7 +138,7 @@ export default function Experience() {
                       </span>
                     </div>
                     <h3 className="font-display" style={{
-                      fontSize: 'clamp(24px, 3vw, 36px)',
+                      fontSize: 'clamp(22px, 3vw, 36px)',
                       fontWeight: 600, color: '#FAFAF8',
                       lineHeight: 1.05, letterSpacing: '-0.03em',
                     }}>
@@ -165,7 +168,7 @@ export default function Experience() {
                 </p>
 
                 {/* Tags */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: exp.linkedInEmbed ? '28px' : '0' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {exp.tags.map(t => (
                     <span key={t} style={{
                       padding: '4px 12px', borderRadius: '100px',
@@ -178,29 +181,6 @@ export default function Experience() {
                     </span>
                   ))}
                 </div>
-
-                {/* LinkedIn embed */}
-                {exp.linkedInEmbed && (
-                  <div>
-                    <p style={{ fontSize: '11px', fontWeight: 600, color: '#6B7280', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>
-                      Featured Post
-                    </p>
-                    <iframe
-                      src={exp.linkedInEmbed}
-                      height="400"
-                      width="100%"
-                      frameBorder="0"
-                      allowFullScreen
-                      title="LinkedIn Post"
-                      style={{
-                        borderRadius: '12px',
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        maxWidth: '552px',
-                        display: 'block',
-                      }}
-                    />
-                  </div>
-                )}
               </div>
             </motion.div>
           ))}
