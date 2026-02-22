@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FAFAF8;
+  color: #111218;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #FAFAF8;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E2342;
+  border-radius: 2px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0px) rotate(12deg); }
+  50% { transform: translateY(-10px) rotate(12deg); }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.animate-float {
+  animation: float 7s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 9s ease-in-out 1.5s infinite;
+}
+
+.animate-float-slow {
+  animation: float 10s ease-in-out 3s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 5s ease-in-out infinite;
+}
+
+.project-card {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.10);
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: #4B5563;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #0891B2;
+  transition: width 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #0891B2;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  background: rgba(8, 145, 178, 0.08);
+  color: #0891B2;
+  border: 1px solid rgba(8, 145, 178, 0.15);
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #0891B2;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #111218 30%, #0891B2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes shimmer-line {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.timeline-line {
+  animation: shimmer-line 1s ease-out forwards;
+  transform-origin: top;
+}
+
+input, textarea {
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: #0891B2 !important;
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
+}
