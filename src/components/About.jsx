@@ -99,7 +99,7 @@ export default function About() {
                 <span>🇺🇸</span>
                 <span>
                   <span style={{ fontWeight: 600, color: '#059669' }}>F-1 Student</span>
-                  <span style={{ color: '#6B7280', marginLeft: '4px' }}>· OPT &amp; STEM OPT eligible · Seeking full-time roles</span>
+                  <span style={{ color: '#6B7280', marginLeft: '4px' }}>· OPT &amp; STEM OPT eligible · Seeking full-time roles · Open to relocation anywhere in the USA or remote</span>
                 </span>
               </span>
 
