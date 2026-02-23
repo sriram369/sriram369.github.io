@@ -62,7 +62,7 @@ const projects = [
       'Analyzed every Airbnb listing across Washington D.C. to identify which neighborhoods and property types offer the best return for investors. Surfaces pricing trends, occupancy patterns, and location-based insights to answer: where should you actually put your money? Course project for Data Science & Business Intelligence.',
     tech: ['Python', 'Data Science', 'BI Tools', 'Analytics'],
     link: 'https://github.com/sriram369/dc-airbnb-analytic',
-    demo: 'https://dc-airbnb-analytic-6gqkvht9fjf95blrk68d4o.streamlit.app/',
+    demo: 'https://app-cool-aj.streamlit.app/',
     report: '/dc-airbnb-report.pdf',
     origin: 'Johns Hopkins University',
     accent: 'rgba(16,185,129,0.18)',
