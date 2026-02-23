@@ -36,7 +36,7 @@ const timeline = [
     accent: '#1A3A52',
     bg: '#EFF6FF',
     border: 'rgba(26,58,82,0.2)',
-    note: 'Built AuraPath — an AI navigation app helping deaf and disabled people transit independently between places. Scored 100/100 — "Exceptional" by Prof. Hassan A. Tetteh.',
+    note: 'Built AuraPath — an AI navigation app helping visually impaired users navigate independently. Scored 100/100 — "Exceptional" by Prof. Hassan A. Tetteh.',
     current: true,
   },
 ]

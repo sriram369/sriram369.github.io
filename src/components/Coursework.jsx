@@ -418,7 +418,7 @@ export default function Coursework() {
             Coursework
           </h2>
           <p style={{ fontSize: '16px', color: '#6B7280', marginTop: '14px', maxWidth: '520px', lineHeight: 1.6 }}>
-            Academic coursework across Johns Hopkins University and VIT Vellore.
+            Academic coursework across Johns Hopkins University, VIT Vellore, and NUS Singapore.
           </p>
         </motion.div>
 
