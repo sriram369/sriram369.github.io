@@ -23,6 +23,8 @@ const experiences = [
     location: 'India',
     flag: '🇮🇳',
     description: 'Worked within Ola\'s Krutrim AI division on building and refining large language models. Focused on LLM fine-tuning and prompt engineering to improve model accuracy and responsiveness — with a strong emphasis on making the models multilingual to serve India\'s diverse linguistic landscape.',
+    link: 'https://kruti.ai',
+    linkLabel: 'kruti.ai',
     tags: ['LLM Fine-Tuning', 'Prompt Engineering', 'Multilingual AI', 'Python', 'NLP'],
     accent: 'rgba(245,158,11,0.18)',
     accentSecondary: 'rgba(8,145,178,0.10)',
@@ -161,11 +163,28 @@ export default function Experience() {
                 {/* Description */}
                 <p style={{
                   fontSize: '15px', lineHeight: 1.75, color: '#D1D5DB',
-                  maxWidth: '720px', marginBottom: '24px',
+                  maxWidth: '720px', marginBottom: exp.link ? '12px' : '24px',
                   letterSpacing: '-0.005em',
                 }}>
                   {exp.description}
                 </p>
+
+                {/* External link */}
+                {exp.link && (
+                  <p style={{ fontSize: '14px', color: '#9CA3AF', marginBottom: '24px' }}>
+                    You can check out some of that work at{' '}
+                    <a
+                      href={exp.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: exp.color, textDecoration: 'none', fontWeight: 600 }}
+                      onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                      onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                    >
+                      {exp.linkLabel} ↗
+                    </a>
+                  </p>
+                )}
 
                 {/* Tags */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
