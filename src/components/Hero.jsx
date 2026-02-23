@@ -143,7 +143,7 @@ export default function Hero() {
         >
           <CTAButton href="#projects" variant="primary">View Projects</CTAButton>
           <CTAButton href="#contact" variant="teal">Get in Touch</CTAButton>
-          <CTAButton href="#" variant="ghost">Download Resume ↓</CTAButton>
+          <CTAButton href="/Sriram_Resume.pdf" variant="ghost" download="Sriram_Resume.pdf">Download Resume ↓</CTAButton>
         </motion.div>
 
         {/* Journey strip */}
@@ -201,7 +201,7 @@ export default function Hero() {
   )
 }
 
-function CTAButton({ href, variant, children }) {
+function CTAButton({ href, variant, children, download }) {
   const base = {
     display: 'inline-flex', alignItems: 'center',
     padding: '11px 24px',
@@ -225,6 +225,7 @@ function CTAButton({ href, variant, children }) {
   return (
     <a
       href={href}
+      download={download}
       style={{ ...base, ...variants[variant] }}
       onMouseEnter={e => Object.assign(e.currentTarget.style, hoverMap[variant])}
       onMouseLeave={e => Object.assign(e.currentTarget.style, variants[variant])}
