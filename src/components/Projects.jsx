@@ -305,25 +305,46 @@ export default function Projects() {
                     )}
                   </div>
                 ) : (
-                  <a
-                    href="/AuraPath_Report.pdf"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '8px',
-                      padding: '10px 22px',
-                      background: '#0891B2',
-                      borderRadius: '8px',
-                      fontSize: '13px', fontWeight: 600,
-                      color: '#fff',
-                      textDecoration: 'none',
-                      transition: 'background 0.2s ease',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#0771A2'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#0891B2'}
-                  >
-                    View PDF Report ↗
-                  </a>
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <a
+                      href="/AuraPath_Report.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '8px',
+                        padding: '10px 22px',
+                        background: '#0891B2',
+                        borderRadius: '8px',
+                        fontSize: '13px', fontWeight: 600,
+                        color: '#fff',
+                        textDecoration: 'none',
+                        transition: 'background 0.2s ease',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#0771A2'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#0891B2'}
+                    >
+                      View PDF Report ↗
+                    </a>
+                    <a
+                      href="/aurapath-slides.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '8px',
+                        padding: '10px 22px',
+                        background: '#7C3AED',
+                        borderRadius: '8px',
+                        fontSize: '13px', fontWeight: 600,
+                        color: '#fff',
+                        textDecoration: 'none',
+                        transition: 'background 0.2s ease',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#6D28D9'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#7C3AED'}
+                    >
+                      View Slides ↗
+                    </a>
+                  </div>
                 )}
               </div>
             </motion.div>

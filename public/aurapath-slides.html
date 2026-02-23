@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraPath — Accessible Navigation Through AI</title>
+
+  <!-- Archivo Black (headlines) + Space Grotesk (body) — from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================================
+       THEME — MIXED STYLE
+       Dark Botanical warmth + Neon Cyber glow
+       + Bold Signal stat cards + Archivo Black
+       =========================================== */
+    :root {
+      /* Core colors */
+      --bg:          #0d0d0f;
+      --bg-card:     #161619;
+      --cyan:        #00ffc8;
+      --cyan-dim:    rgba(0, 255, 200, 0.10);
+      --cyan-glow:   rgba(0, 255, 200, 0.25);
+      --orange:      #FF5722;
+      --text:        #e8e4df;
+      --text-muted:  rgba(232, 228, 223, 0.48);
+      --text-faint:  rgba(232, 228, 223, 0.18);
+      --border:      rgba(232, 228, 223, 0.07);
+      --border-cyan: rgba(0, 255, 200, 0.18);
+
+      /* Typography */
+      --font-display: 'Archivo Black', sans-serif;
+      --font-body:    'Space Grotesk', sans-serif;
+
+      /* Font sizes — ALL use clamp() for viewport scaling */
+      --title-size:  clamp(2.75rem, 8vw, 7rem);
+      --h2-size:     clamp(1.5rem, 4vw, 3rem);
+      --h3-size:     clamp(1rem, 2.5vw, 1.6rem);
+      --body-size:   clamp(0.8rem, 1.4vw, 1rem);
+      --small-size:  clamp(0.65rem, 1vw, 0.8rem);
+      --stat-size:   clamp(2rem, 5.5vw, 4.5rem);
+
+      /* Spacing */
+      --pad:         clamp(1.5rem, 5vw, 5rem);
+      --gap:         clamp(0.75rem, 2vw, 1.75rem);
+      --card-gap:    clamp(0.5rem, 1.5vw, 1rem);
+
+      /* Motion */
+      --ease-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+      --dur:         0.7s;
+    }
+
+    /* ===========================================
+       RESET
+       =========================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      height: 100%;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    /* ===========================================
+       GLOBAL BACKGROUND
+       Warm orbs (Dark Botanical) + particle canvas (Neon Cyber)
+       =========================================== */
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; opacity: 0.55;
+    }
+
+    .bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .orb     { position: absolute; border-radius: 50%; filter: blur(110px); }
+    .orb-1   { width: 55vw; height: 55vw; background: rgba(212,165,116,0.07); top: -15%; left: -15%; }
+    .orb-2   { width: 40vw; height: 40vw; background: rgba(232,180,184,0.05); bottom: -10%; right: -5%; }
+    .orb-3   { width: 30vw; height: 30vw; background: rgba(0,200,150,0.05);   top: 35%; right: 5%; }
+
+    /* ===========================================
+       SLIDE — CRITICAL: each = exactly one viewport
+       =========================================== */
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;        /* mobile dynamic viewport */
+      padding: var(--pad);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;      /* NEVER let content overflow */
+      z-index: 1;
+    }
+
+    /* ===========================================
+       REVEAL ANIMATIONS
+       Elements start hidden, become visible when
+       .visible is added by IntersectionObserver
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity var(--dur) var(--ease-expo),
+                  transform var(--dur) var(--ease-expo);
+    }
+    .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+
+    .reveal-left {
+      opacity: 0; transform: translateX(-28px);
+      transition: opacity var(--dur) var(--ease-expo), transform var(--dur) var(--ease-expo);
+    }
+    .slide.visible .reveal-left { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale {
+      opacity: 0; transform: scale(0.93);
+      transition: opacity var(--dur) var(--ease-expo), transform var(--dur) var(--ease-expo);
+    }
+    .slide.visible .reveal-scale { opacity: 1; transform: scale(1); }
+
+    /* Staggered delays for children */
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.18s; }
+    .d3 { transition-delay: 0.28s; }
+    .d4 { transition-delay: 0.38s; }
+    .d5 { transition-delay: 0.48s; }
+    .d6 { transition-delay: 0.58s; }
+
+    /* ===========================================
+       REUSABLE COMPONENTS
+       =========================================== */
+
+    /* Section eyebrow label */
+    .eyebrow {
+      font-size: var(--small-size); letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--cyan);
+      font-weight: 400; opacity: 0.75;
+      margin-bottom: clamp(0.4rem, 1.2vw, 0.9rem);
+    }
+
+    /* Main slide heading */
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      color: var(--text); line-height: 1.08;
+      margin-bottom: clamp(0.6rem, 1.8vw, 1.4rem);
+    }
+
+    /* Body paragraph */
+    .slide-body {
+      font-size: var(--body-size); color: var(--text-muted);
+      line-height: 1.7; max-width: 58ch;
+    }
+
+    /* Cyan badge tag */
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      background: var(--cyan-dim); border: 1px solid var(--border-cyan);
+      color: var(--cyan); padding: 0.25em 0.8em; border-radius: 2px;
+      font-size: var(--small-size); letter-spacing: 0.12em; text-transform: uppercase;
+      width: fit-content;
+    }
+    .tag::before {
+      content: ''; width: 5px; height: 5px;
+      background: var(--cyan); border-radius: 50%;
+      animation: pulse 1.8s infinite;
+    }
+
+    /* Dark card with top cyan line */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: clamp(0.85rem, 2.2vw, 1.75rem);
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0.25;
+    }
+
+    /* Orange stat card (Bold Signal-style) */
+    .card-orange {
+      background: var(--orange); border-radius: 8px;
+      padding: clamp(0.85rem, 2.2vw, 1.75rem);
+      position: relative; overflow: hidden;
+    }
+    .card-orange::before {
+      content: ''; position: absolute; top: -40%; right: -20%;
+      width: 80%; height: 80%;
+      background: rgba(0,0,0,0.12); border-radius: 50%;
+    }
+
+    /* Large stat number */
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: var(--stat-size); line-height: 1; color: var(--text);
+    }
+    .stat-num.cyan   { color: var(--cyan); text-shadow: 0 0 40px var(--cyan-glow); }
+    .stat-num.orange { color: var(--orange); }
+    .stat-num.dark   { color: #141414; }
+
+    .stat-label {
+      font-size: var(--small-size); color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.14em; margin-top: 0.3em; line-height: 1.4;
+    }
+    .stat-label.dark { color: rgba(0,0,0,0.55); }
+
+    /* Horizontal rule */
+    .divider {
+      width: clamp(2rem, 5vw, 4rem); height: 1px;
+      background: rgba(0,255,200,0.3);
+      margin: clamp(0.6rem, 1.5vw, 1.2rem) 0;
+    }
+
+    /* Grid layouts */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr;        gap: var(--card-gap); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--card-gap); }
+    .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--card-gap); }
+
+    /* Bullet list */
+    .bullet-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.35rem, 0.9vh, 0.7rem); }
+    .bullet-list li {
+      font-size: var(--body-size); color: var(--text-muted); line-height: 1.55;
+      display: flex; align-items: flex-start; gap: 0.8em;
+    }
+    .bullet-list li::before { content: '—'; color: var(--cyan); opacity: 0.55; flex-shrink: 0; }
+
+    /* Numbered steps */
+    .steps { display: flex; flex-direction: column; gap: clamp(0.35rem, 1vh, 0.65rem); }
+    .step {
+      display: flex; align-items: flex-start; gap: clamp(0.75rem, 1.5vw, 1.25rem);
+      padding: clamp(0.45rem, 1.2vw, 0.9rem) clamp(0.75rem, 2vw, 1.5rem);
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+    }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+      color: var(--cyan); opacity: 0.55; flex-shrink: 0; min-width: 2em;
+    }
+    .step h4 { font-size: var(--body-size); color: var(--text); font-weight: 600; margin-bottom: 0.1em; }
+    .step p  { font-size: var(--small-size); color: var(--text-muted); line-height: 1.4; }
+
+    /* Phase / roadmap card */
+    .phase-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: clamp(0.75rem, 2vw, 1.5rem);
+    }
+    .phase-year {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--cyan); opacity: 0.28; line-height: 1; margin-bottom: 0.25em;
+    }
+    .phase-title { font-size: var(--body-size); font-weight: 600; color: var(--text); margin-bottom: 0.35em; }
+    .phase-desc  { font-size: var(--small-size); color: var(--text-muted); line-height: 1.5; }
+    .phase-milestone { margin-top: 0.5em; font-size: var(--small-size); color: var(--cyan); opacity: 0.65; line-height: 1.5; }
+
+    /* Risk table rows */
+    .risk-list { display: flex; flex-direction: column; }
+    .risk-row {
+      display: grid; grid-template-columns: max-content 1fr;
+      gap: clamp(0.75rem, 2vw, 2rem); align-items: start;
+      padding: clamp(0.5rem, 1.2vw, 0.9rem) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .risk-row:last-child { border-bottom: none; }
+    .risk-name { font-size: var(--body-size); font-weight: 600; color: var(--text); white-space: nowrap; }
+    .risk-mit  { font-size: var(--small-size); color: var(--text-muted); line-height: 1.55; }
+
+    /* ===========================================
+       NAV DOTS — right edge
+       =========================================== */
+    #nav-dots {
+      position: fixed; right: clamp(0.75rem, 1.5vw, 1.25rem); top: 50%;
+      transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 0.5rem; z-index: 100;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.2); cursor: pointer; border: none;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .dot.active {
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan-glow);
+      transform: scale(1.5);
+    }
+
+    /* ===========================================
+       PROGRESS BAR — top
+       =========================================== */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: var(--cyan); box-shadow: 0 0 8px var(--cyan-glow);
+      transition: width 0.4s var(--ease-expo); z-index: 100;
+    }
+
+    /* ===========================================
+       SLIDE COUNTER — bottom right
+       =========================================== */
+    #slide-counter {
+      position: fixed; bottom: clamp(0.75rem, 1.5vw, 1.25rem); right: clamp(1rem, 2vw, 1.5rem);
+      font-size: var(--small-size); color: var(--text-faint); z-index: 100; letter-spacing: 0.1em;
+    }
+
+    /* ===========================================
+       RESPONSIVE BREAKPOINTS — height-based
+       =========================================== */
+    @media (max-height: 700px) {
+      :root {
+        --pad:       clamp(1rem, 3.5vw, 3rem);
+        --gap:       clamp(0.5rem, 1.5vw, 1.25rem);
+        --h2-size:   clamp(1.25rem, 3.5vw, 2.25rem);
+        --stat-size: clamp(1.75rem, 4vw, 3rem);
+      }
+    }
+    @media (max-height: 600px) {
+      :root {
+        --pad:       clamp(0.75rem, 2.5vw, 2rem);
+        --gap:       clamp(0.4rem, 1vw, 0.75rem);
+        --h2-size:   clamp(1.1rem, 3vw, 1.75rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      }
+      #nav-dots, .eyebrow { display: none; }
+    }
+    @media (max-height: 500px) {
+      :root {
+        --pad:        clamp(0.5rem, 2vw, 1.5rem);
+        --title-size: clamp(1.75rem, 5vw, 3.5rem);
+        --h2-size:    clamp(1rem, 2.5vw, 1.5rem);
+      }
+    }
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .risk-row { grid-template-columns: 1fr; }
+      :root { --title-size: clamp(2.5rem, 12vw, 4.5rem); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-scale { transition: opacity 0.3s ease; transform: none !important; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ===========================================
+       ANIMATIONS
+       =========================================== */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ===========================================
+       SLIDE 1 — TITLE
+       =========================================== */
+    #s1 .big-title {
+      font-family: var(--font-display);
+      font-size: var(--title-size); line-height: 0.92;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+    #s1 .big-title span { color: var(--cyan); text-shadow: 0 0 80px rgba(0,255,200,0.25); }
+    #s1 .subtitle {
+      font-size: clamp(0.875rem, 2vw, 1.2rem); color: var(--text-muted);
+      font-weight: 300; max-width: 52ch; line-height: 1.65;
+      margin-top: clamp(0.6rem, 1.5vw, 1.1rem);
+    }
+    #s1 .team-row { display: flex; flex-wrap: wrap; gap: 0.3em 1.1em; margin-top: clamp(1rem, 2.5vw, 2rem); }
+    #s1 .team-member { font-size: var(--small-size); color: var(--text-faint); letter-spacing: 0.04em; }
+    #s1 .course-tag {
+      position: absolute; top: var(--pad); right: var(--pad);
+      font-size: var(--small-size); color: var(--text-faint);
+      letter-spacing: 0.08em; text-align: right; line-height: 1.7;
+    }
+    #s1 .vert-line {
+      position: absolute; bottom: var(--pad); left: var(--pad);
+      width: 1px; height: clamp(2.5rem, 7vh, 4.5rem);
+      background: linear-gradient(to top, transparent, rgba(0,255,200,0.45));
+    }
+
+    /* ===========================================
+       SLIDE 2 — PROBLEM: asymmetric split
+       =========================================== */
+    #s2 {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      #s2 { grid-template-columns: 1fr; display: flex; flex-direction: column; justify-content: center; }
+    }
+    #s2 .right-stats { display: flex; flex-direction: column; gap: var(--card-gap); }
+
+    /* ===========================================
+       SLIDE 4 — SENSOR CARDS
+       =========================================== */
+    .sensor-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: clamp(0.75rem, 2vw, 1.5rem);
+    }
+    .sensor-icon { font-size: clamp(1.25rem, 2.5vw, 1.75rem); margin-bottom: 0.4em; display: block; }
+    .sensor-name { font-size: var(--body-size); font-weight: 600; color: var(--text); margin-bottom: 0.3em; }
+    .sensor-desc { font-size: var(--small-size); color: var(--text-muted); line-height: 1.5; }
+
+    /* ===========================================
+       SLIDE 8 — KPI CARDS
+       =========================================== */
+    .kpi-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: clamp(0.85rem, 2.2vw, 1.75rem);
+      display: flex; flex-direction: column; justify-content: flex-end;
+    }
+
+    /* ===========================================
+       SLIDE 10 — CONCLUSION / CTA
+       =========================================== */
+    #s10 .cta-box {
+      display: flex; flex-direction: column; justify-content: center;
+      height: 100%;
+    }
+    #s10 .rec-text {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.5vw, 1.75rem);
+      color: #141414; line-height: 1.2;
+    }
+    #s10 .rec-label {
+      font-size: var(--small-size); color: rgba(0,0,0,0.45);
+      text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Global warm orbs — Dark Botanical layer -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- Particle canvas — Neon Cyber layer -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- Fixed UI chrome -->
+<div id="progress-bar" style="width:10%"></div>
+<nav id="nav-dots" aria-label="Slide navigation"></nav>
+<div id="slide-counter">1 / 10</div>
+
+
+<!-- ==========================================
+     SLIDE 1 — TITLE
+     ========================================== -->
+<section class="slide" id="s1" data-slide="0">
+  <div class="course-tag">
+    BU.350.620 · Digital Transformation<br>
+    Prof. Hassan A. Tetteh · Oct 2025
+  </div>
+  <div class="vert-line"></div>
+
+  <div class="tag reveal d1">AI Navigation Platform</div>
+  <div class="big-title reveal d2">Aura<span>Path</span></div>
+  <p class="subtitle reveal d3">
+    A Strategic Proposal for Accessible Navigation Through AI —<br>
+    bridging the gap for 67 million Americans with disabilities.
+  </p>
+
+  <div class="team-row reveal d4">
+    <span class="team-member">O.J. Idogun — Project Manager</span>
+    <span class="team-member">Sriram Naidu Thota — Product Vision Lead</span>
+    <span class="team-member">Chengcheng Du — User Research Lead</span>
+    <span class="team-member">Venkat S. Krishnan — Technology &amp; AI Lead</span>
+    <span class="team-member">Yizhou (Joey) Zhang — UI/UX Designer</span>
+    <span class="team-member">Lucia Zhou — Business Strategist</span>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 2 — THE PROBLEM
+     ========================================== -->
+<section class="slide" id="s2" data-slide="1">
+  <!-- Left: problem text -->
+  <div>
+    <div class="eyebrow reveal d1">The Problem</div>
+    <h2 class="slide-title reveal d2">The Accessibility<br>Gap in Navigation</h2>
+    <div class="divider reveal d3"></div>
+    <ul class="bullet-list reveal d4">
+      <li>Standard apps are built for mainstream users — not the 67M Americans with disabilities</li>
+      <li>They miss <strong style="color:var(--text)">micro-barriers</strong>: cracked pavement, missing curb cuts, low-contrast signs, temporary obstructions</li>
+      <li>GPS fails entirely indoors — where accessible paths matter most</li>
+      <li>The result: limited independence, daily risk, and a persistent digital divide</li>
+    </ul>
+  </div>
+
+  <!-- Right: Bold Signal stat cards -->
+  <div class="right-stats">
+    <div class="card-orange reveal-scale d2">
+      <div class="stat-num dark">67M</div>
+      <div class="stat-label dark">Americans with disabilities — underserved by every major navigation platform</div>
+    </div>
+    <div class="card reveal-scale d4">
+      <div class="stat-num cyan">75%</div>
+      <div class="stat-label">of visually impaired users feel <em>unsafe</em> with traditional mapping tools
+        <br><span style="opacity:0.45; font-size:0.85em;">— National Federation of the Blind</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 3 — OUR SOLUTION
+     ========================================== -->
+<section class="slide" id="s3" data-slide="2">
+  <div class="eyebrow reveal d1">Our Solution</div>
+  <h2 class="slide-title reveal d2">Introducing AuraPath</h2>
+  <p class="slide-body reveal d3" style="margin-bottom: var(--gap);">
+    A digital-mobility startup that transforms navigation through AI — delivering real-time, context-aware,
+    audio-first guidance with centimeter-level precision, seamlessly from outdoor sidewalk to indoor destination.
+  </p>
+
+  <div class="grid-3 reveal d4" style="max-height: min(55vh, 380px);">
+    <div class="card">
+      <div class="sensor-icon">🎧</div>
+      <div class="sensor-name">Audio-First Guidance</div>
+      <div class="sensor-desc">Descriptive voice directions designed around accessibility — not an afterthought, but the entire experience.</div>
+    </div>
+    <div class="card" style="border-color: var(--border-cyan);">
+      <div class="sensor-icon">📍</div>
+      <div class="sensor-name">Centimeter Precision</div>
+      <div class="sensor-desc">Sensor fusion delivers accuracy GPS cannot match — detecting hazards, elevation changes, and safe paths in real-time.</div>
+    </div>
+    <div class="card" style="border-color: rgba(255,87,34,0.18);">
+      <div class="sensor-icon">🏛️</div>
+      <div class="sensor-name">Outdoor → Indoor</div>
+      <div class="sensor-desc">Continuous guidance from sidewalk to final destination. No competitor currently provides this end-to-end experience.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 4 — SENSOR FUSION ENGINE
+     ========================================== -->
+<section class="slide" id="s4" data-slide="3">
+  <div class="eyebrow reveal d1">Technology</div>
+  <div style="display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:var(--gap);">
+    <h2 class="slide-title reveal d2" style="margin-bottom:0;">Sensor Fusion Engine</h2>
+    <div class="tag reveal d3" style="flex-shrink:0;">90%+ Environmental Accuracy</div>
+  </div>
+
+  <div class="grid-4 reveal d3" style="max-height:min(60vh, 420px);">
+    <div class="sensor-card">
+      <span class="sensor-icon">🛰️</span>
+      <div class="sensor-name">GPS</div>
+      <div class="sensor-desc">Provides macro-level location for initial route planning — sets the system's geographic context.</div>
+    </div>
+    <div class="sensor-card" style="border-color:var(--border-cyan);">
+      <span class="sensor-icon">📡</span>
+      <div class="sensor-name">LiDAR</div>
+      <div class="sensor-desc">Emits laser pulses to generate a real-time 3D depth map — enabling precise obstacle and elevation detection.</div>
+    </div>
+    <div class="sensor-card" style="border-color:rgba(255,87,34,0.15);">
+      <span class="sensor-icon">👁️</span>
+      <div class="sensor-name">Computer Vision AI</div>
+      <div class="sensor-desc">Trained ML model recognizes objects, reads signs, and identifies safe pedestrian pathways from the camera feed.</div>
+    </div>
+    <div class="sensor-card">
+      <span class="sensor-icon">📐</span>
+      <div class="sensor-name">IMU Sensors</div>
+      <div class="sensor-desc">Accelerometer &amp; gyroscope track orientation and micro-movements to refine position and analyze surface quality.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 5 — USER JOURNEY
+     ========================================== -->
+<section class="slide" id="s5" data-slide="4">
+  <div class="eyebrow reveal d1">Redesigned Process</div>
+  <h2 class="slide-title reveal d2">How AuraPath Works</h2>
+
+  <div class="steps reveal d3">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <h4>Voice Initiation</h4>
+        <p>"Hey AuraPath, take me to Gilman Hall" — simple, natural, hands-free command.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <h4>Dynamic Route Planning</h4>
+        <p>System calculates a route based on accessibility data — not just distance, but actual real-world passability.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <h4>Continuous Environmental Scanning</h4>
+        <p>Sensor Fusion Engine actively scans the path ahead, detecting obstacles traditional maps cannot see.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <h4>Adaptive Guidance</h4>
+        <p>Descriptive audio and haptic alerts guide the user around obstructions, redesigning the journey in real-time.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div>
+        <h4>Feedback Loop</h4>
+        <p>Users rate route accessibility on arrival — feeding data back to improve the system for every future user.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 6 — ORGANIZATIONAL IMPACT
+     ========================================== -->
+<section class="slide" id="s6" data-slide="5">
+  <div class="eyebrow reveal d1">Impact</div>
+  <h2 class="slide-title reveal d2">Who AuraPath Changes</h2>
+
+  <div class="grid-2 reveal d3" style="max-height:min(62vh, 440px);">
+    <div class="card">
+      <div style="color:var(--cyan); font-size:var(--small-size); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.7rem; opacity:0.7;">For Users</div>
+      <ul class="bullet-list">
+        <li>Restored <strong style="color:var(--text)">independence</strong> — navigate without relying on others</li>
+        <li>Reduced daily anxiety when moving through unfamiliar environments</li>
+        <li>Greater participation in academic, professional, and social life</li>
+        <li>Real-time safety — confidence that the path ahead is clear</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:rgba(255,87,34,0.18);">
+      <div style="color:var(--orange); font-size:var(--small-size); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.7rem;">For Institutional Partners</div>
+      <ul class="bullet-list">
+        <li>Tangible commitment to <strong style="color:var(--text)">ADA compliance</strong> and inclusion</li>
+        <li>Integrates into official university accessibility resources</li>
+        <li>Positions institutions as leaders in tech for social good</li>
+        <li>Staff training + awareness campaigns drive student adoption</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 7 — IMPLEMENTATION ROADMAP
+     ========================================== -->
+<section class="slide" id="s7" data-slide="6">
+  <div class="eyebrow reveal d1">Implementation</div>
+  <h2 class="slide-title reveal d2">3-Phase Rollout Strategy</h2>
+
+  <div class="grid-3 reveal d3" style="max-height:min(60vh, 430px);">
+    <div class="phase-card">
+      <div class="phase-year">2026</div>
+      <div class="phase-title">Phase 1 — Campus Launch</div>
+      <div class="phase-desc">MVP development and pilot at Johns Hopkins University. Controlled environment for testing and data validation.</div>
+      <div class="phase-milestone">✓ 90% trip completion on campus<br>✓ Formal JHU partnership secured</div>
+    </div>
+    <div class="phase-card" style="border-color:var(--border-cyan);">
+      <div class="phase-year">2027</div>
+      <div class="phase-title">Phase 2 — City Integration</div>
+      <div class="phase-desc">Partner with Baltimore Mobility Board to expand citywide. Integrate with public transit data and map the downtown core.</div>
+      <div class="phase-milestone">✓ Baltimore core mapped<br>✓ Transit data integrated</div>
+    </div>
+    <div class="phase-card" style="border-color:rgba(255,87,34,0.14);">
+      <div class="phase-year">2028–29</div>
+      <div class="phase-title">Phase 3 — Regional Expansion</div>
+      <div class="phase-desc">Strategic rollout to Washington D.C., Boston, and New York City metro areas.</div>
+      <div class="phase-milestone">✓ 10,000 MAU per new city<br>✓ B2C freemium model active</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 8 — METRICS FOR SUCCESS
+     ========================================== -->
+<section class="slide" id="s8" data-slide="7">
+  <div class="eyebrow reveal d1">KPIs</div>
+  <h2 class="slide-title reveal d2">Metrics for Success</h2>
+
+  <div class="grid-4 reveal d3" style="max-height:min(50vh, 360px);">
+    <div class="kpi-card">
+      <div class="stat-num cyan">20%</div>
+      <div class="stat-label">Daily Active Users<br>as % of Monthly Active</div>
+    </div>
+    <div class="kpi-card">
+      <div class="stat-num orange">90%+</div>
+      <div class="stat-label">Trip Completion Rate<br>Target reliability</div>
+    </div>
+    <div class="kpi-card">
+      <div class="stat-num">80%</div>
+      <div class="stat-label">3-Month User Retention<br>Among pilot group</div>
+    </div>
+    <div class="kpi-card">
+      <div class="stat-num cyan">10+</div>
+      <div class="stat-label">University Partnerships<br>by Year 3</div>
+    </div>
+  </div>
+
+  <div class="card reveal d5" style="margin-top:var(--card-gap); display:flex; align-items:center; gap:1.5rem;">
+    <div style="font-family:var(--font-display); font-size:clamp(1.25rem,3vw,2.25rem); color:var(--cyan); flex-shrink:0;">15%</div>
+    <div style="font-size:var(--small-size); color:var(--text-muted);">
+      Improvement in Accessibility Index of pilot zones within Year 1 — our measurable social impact commitment
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 9 — RISKS & MITIGATIONS
+     ========================================== -->
+<section class="slide" id="s9" data-slide="8">
+  <div class="eyebrow reveal d1">Risk Assessment</div>
+  <h2 class="slide-title reveal d2">Risks &amp; Mitigations</h2>
+
+  <div class="card reveal d3">
+    <div class="risk-list">
+      <div class="risk-row">
+        <div class="risk-name">⚙️&nbsp; Hardware</div>
+        <div class="risk-mit">MVP requires iPhone LiDAR. We focus iOS-first, then develop Android as LiDAR becomes standard on those devices.</div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-name">🔒&nbsp; Data Privacy</div>
+        <div class="risk-mit">On-device AI processing, end-to-end encryption, and transparent data policies ensure GDPR compliance and user trust.</div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-name">📣&nbsp; User Adoption</div>
+        <div class="risk-mit">Partner with trusted organizations like the National Federation of the Blind and universities to build credibility and drive awareness.</div>
+      </div>
+      <div class="risk-row">
+        <div class="risk-name">🏢&nbsp; Competition</div>
+        <div class="risk-mit">Move fast, patent core sensor fusion technology, and build a defensible brand focused entirely on accessibility.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ==========================================
+     SLIDE 10 — CONCLUSION
+     ========================================== -->
+<section class="slide" id="s10" data-slide="9">
+  <div class="eyebrow reveal d1">Recommendation</div>
+  <h2 class="slide-title reveal d2" style="max-width:18ch;">A Clear Opportunity to Lead</h2>
+  <div class="divider reveal d3"></div>
+  <p class="slide-body reveal d4" style="margin-bottom:var(--gap);">
+    AuraPath addresses a critical, underserved market with a technologically superior solution.
+    Commercial success and profound social impact are aligned — not in conflict.
+  </p>
+
+  <div class="grid-2 reveal d5" style="max-height:min(40vh, 270px);">
+    <div class="card-orange cta-box">
+      <div class="rec-label">Formal Recommendation</div>
+      <div class="rec-text">Proceed with MVP Development + JHU Pilot Partnership</div>
+    </div>
+    <div>
+      <ul class="bullet-list">
+        <li>Pilot at JHU validates core tech before scaling to cities</li>
+        <li>Patent sensor fusion early to build a defensible position</li>
+        <li>B2B subscriptions generate revenue while B2C scales the user base</li>
+        <li>Target: 10+ university partners by Year 3, 10K MAU per city by 2028</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+<script>
+/* ===========================================
+   PARTICLE BACKGROUND — Neon Cyber layer
+   60 floating cyan dots on a canvas element
+   =========================================== */
+(function initParticles() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx    = canvas.getContext('2d');
+
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const pts = Array.from({ length: 55 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.3 + 0.3,
+    vx: (Math.random() - 0.5) * 0.22,
+    vy: (Math.random() - 0.5) * 0.22,
+    a: Math.random() * 0.28 + 0.05
+  }));
+
+  (function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pts.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,255,200,${p.a})`;
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    });
+    requestAnimationFrame(draw);
+  })();
+})();
+
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   - Keyboard navigation (arrows, space)
+   - Touch/swipe support
+   - Mouse wheel handling
+   - Progress bar + nav dots + counter
+   - IntersectionObserver for reveal animations
+   =========================================== */
+class SlidePresentation {
+  constructor() {
+    this.slides  = Array.from(document.querySelectorAll('.slide'));
+    this.total   = this.slides.length;
+    this.current = 0;
+
+    this.$bar     = document.getElementById('progress-bar');
+    this.$counter = document.getElementById('slide-counter');
+    this.$dots    = document.getElementById('nav-dots');
+
+    this.buildDots();
+    this.initObserver();
+    this.bindKeys();
+    this.bindTouch();
+    this.bindWheel();
+
+    // Show first slide immediately
+    this.slides[0].classList.add('visible');
+    this.updateChrome(0);
+  }
+
+  /* Build one dot per slide */
+  buildDots() {
+    this.slides.forEach((_, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'dot';
+      btn.setAttribute('aria-label', `Slide ${i + 1}`);
+      btn.addEventListener('click', () => this.goTo(i));
+      this.$dots.appendChild(btn);
+    });
+    this.dotEls = Array.from(this.$dots.querySelectorAll('.dot'));
+  }
+
+  /* IntersectionObserver: add .visible when 55% of a slide is in view */
+  initObserver() {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          const idx = this.slides.indexOf(e.target);
+          if (idx !== -1 && idx !== this.current) {
+            this.current = idx;
+            this.updateChrome(idx);
+          }
+        }
+      });
+    }, { threshold: 0.55 });
+
+    this.slides.forEach(s => obs.observe(s));
+  }
+
+  /* Scroll to a slide by index */
+  goTo(i) {
+    if (i < 0 || i >= this.total) return;
+    this.slides[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* Update progress bar, counter, and dot highlights */
+  updateChrome(i) {
+    this.$bar.style.width     = `${((i + 1) / this.total) * 100}%`;
+    this.$counter.textContent = `${i + 1} / ${this.total}`;
+    this.dotEls.forEach((d, j) => d.classList.toggle('active', j === i));
+  }
+
+  bindKeys() {
+    document.addEventListener('keydown', e => {
+      if (['ArrowDown','ArrowRight',' '].includes(e.key))  { e.preventDefault(); this.goTo(this.current + 1); }
+      if (['ArrowUp','ArrowLeft'].includes(e.key))         { e.preventDefault(); this.goTo(this.current - 1); }
+    });
+  }
+
+  bindTouch() {
+    let startY = 0;
+    document.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend',   e => {
+      const dy = startY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 45) this.goTo(this.current + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  bindWheel() {
+    let last = 0;
+    document.addEventListener('wheel', e => {
+      const now = Date.now();
+      if (now - last < 800) return;   // throttle rapid-fire
+      last = now;
+      this.goTo(this.current + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: true });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => new SlidePresentation());
+</script>
+</body>
+</html>
