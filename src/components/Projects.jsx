@@ -29,6 +29,19 @@ const projects = [
     accentSecondary: 'rgba(8,145,178,0.10)',
   },
   {
+    id: 'swaram',
+    title: 'Swaram',
+    tagline: 'Multilingual Voice Chat Application',
+    description:
+      'A real-time voice-to-voice conversational AI enabling hands-free conversations across 11+ Indian languages. Speak naturally — Swaram transcribes your voice, generates an AI response, and speaks back, all in a continuous loop. Features adaptive silence detection, smart farewell detection, and support for Hindi, Tamil, Telugu, Kannada, Bengali, and more. Powered by Sarvam AI.',
+    tech: ['Python', 'FastAPI', 'Sarvam AI', 'Web Audio API', 'Vercel'],
+    link: 'https://github.com/sriram369/callmemaybe',
+    demo: 'https://callmemaybe-two.vercel.app',
+    origin: 'Personal Project',
+    accent: 'rgba(139,92,246,0.20)',
+    accentSecondary: 'rgba(8,145,178,0.10)',
+  },
+  {
     id: 'ewaste',
     title: 'E-Waste Policy Bot',
     tagline: 'RAG Chatbot for E-Waste Regulations',
