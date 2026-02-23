@@ -204,7 +204,7 @@ export default function About() {
             }}>
               {[
                 { number: '7+', label: 'Projects Shipped' },
-                { number: '2026', label: 'MS Graduation' },
+                { number: 'July 2026', label: 'MS Graduating' },
               ].map(stat => (
                 <div key={stat.label} style={{
                   padding: '16px 20px',
