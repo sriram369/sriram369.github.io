@@ -63,6 +63,7 @@ const projects = [
     tech: ['Python', 'Data Science', 'BI Tools', 'Analytics'],
     link: 'https://github.com/sriram369/dc-airbnb-analytic',
     demo: 'https://dc-airbnb-analytic-6gqkvht9fjf95blrk68d4o.streamlit.app/',
+    report: '/dc-airbnb-report.pdf',
     origin: 'Johns Hopkins University',
     accent: 'rgba(16,185,129,0.18)',
     accentSecondary: 'rgba(181,134,13,0.10)',
@@ -301,6 +302,36 @@ export default function Projects() {
                         onMouseLeave={e => e.currentTarget.style.background = '#0891B2'}
                       >
                         Live Demo ↗
+                      </a>
+                    )}
+                    {project.report && (
+                      <a
+                        href={project.report}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '8px',
+                          padding: '10px 20px',
+                          background: 'rgba(255,255,255,0.08)',
+                          border: '1px solid rgba(255,255,255,0.14)',
+                          borderRadius: '8px',
+                          fontSize: '13px', fontWeight: 600,
+                          color: '#E5E7EB',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = 'rgba(8,145,178,0.20)'
+                          e.currentTarget.style.borderColor = 'rgba(8,145,178,0.4)'
+                          e.currentTarget.style.color = '#fff'
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.08)'
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'
+                          e.currentTarget.style.color = '#E5E7EB'
+                        }}
+                      >
+                        View PDF Report ↗
                       </a>
                     )}
                   </div>
