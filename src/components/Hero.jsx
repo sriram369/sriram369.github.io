@@ -2,11 +2,11 @@ import { motion } from 'framer-motion'
 import { useIsMobile } from '../hooks/useIsMobile'
 
 const journey = [
-  { city: 'Hyderabad', flag: '🇮🇳' },
-  { city: 'Bengaluru', flag: '🇮🇳' },
-  { city: 'Vellore', flag: '🇮🇳' },
-  { city: 'Singapore', flag: '🇸🇬' },
-  { city: 'Washington D.C.', flag: '🇺🇸', current: true },
+  { city: 'Hyderabad' },
+  { city: 'Bengaluru' },
+  { city: 'Vellore' },
+  { city: 'Singapore' },
+  { city: 'Washington D.C.', current: true },
 ]
 
 export default function Hero() {
@@ -166,7 +166,6 @@ export default function Hero() {
                 letterSpacing: '0.02em',
                 border: stop.current ? 'none' : '1px solid transparent',
               }}>
-                <span>{stop.flag}</span>
                 {stop.city}
               </span>
               {i < journey.length - 1 && (

@@ -8,7 +8,6 @@ const experiences = [
     logo: 'https://logo.clearbit.com/jhu.edu',
     period: '2025 – Present',
     location: 'Washington D.C., USA',
-    flag: '🇺🇸',
     description: 'Leading social media strategy and content creation for the JHU Carey DC Campus. Grew the Instagram account to 12K+ followers and manage a 50K LinkedIn community of students, alumni, and industry professionals. Championing the #BuildForWhatsNext brand and driving engagement across platforms — while coordinating with faculty and administrators to amplify the school\'s voice.',
     tags: ['Social Media Strategy', 'Content Creation', 'Brand Management', 'LinkedIn', 'Instagram', 'Community Growth'],
     accent: 'rgba(8,145,178,0.20)',
@@ -21,7 +20,6 @@ const experiences = [
     logo: 'https://logo.clearbit.com/olacabs.com',
     period: 'Aug 2023 – Nov 2023',
     location: 'India',
-    flag: '🇮🇳',
     description: 'Worked within Ola\'s Krutrim AI division on building and refining large language models. Focused on LLM fine-tuning and prompt engineering to improve model accuracy and responsiveness — with a strong emphasis on making the models multilingual to serve India\'s diverse linguistic landscape.',
     link: 'https://kruti.ai',
     linkLabel: 'kruti.ai',
@@ -36,7 +34,6 @@ const experiences = [
     logo: 'https://logo.clearbit.com/extern.com',
     period: 'Remote',
     location: 'Remote',
-    flag: '🌐',
     description: 'Drove product strategy by analyzing qualitative customer feedback and user behavior data to identify key pain points and strategic pivots. Translated insights into actionable engineering requirements and authored clear technical documentation for stakeholders, directly influencing the product roadmap.',
     tags: ['Product Strategy', 'User Research', 'Technical Documentation', 'AI Product', 'Roadmapping'],
     accent: 'rgba(99,102,241,0.18)',
@@ -117,7 +114,7 @@ export default function Experience() {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
                       {exp.logo && (
-                        <img
+                          <img
                           src={exp.logo}
                           alt=""
                           style={{
@@ -131,7 +128,6 @@ export default function Experience() {
                           onError={e => { e.currentTarget.style.display = 'none' }}
                         />
                       )}
-                      <span style={{ fontSize: '16px' }}>{exp.flag}</span>
                       <span style={{
                         fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em',
                         textTransform: 'uppercase', color: exp.color,

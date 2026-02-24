@@ -96,7 +96,6 @@ export default function About() {
                 marginTop: '16px',
                 marginBottom: '4px',
               }}>
-                <span>🇺🇸</span>
                 <span>
                   <span style={{ fontWeight: 600, color: '#059669' }}>F-1 Student</span>
                   <span style={{ color: '#6B7280', marginLeft: '4px' }}>· OPT &amp; STEM OPT eligible · Seeking full-time roles · Open to relocation anywhere in the USA or remote</span>
@@ -106,10 +105,10 @@ export default function About() {
               {/* Social stats */}
               <span style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '16px' }}>
                 {[
-                  { label: '12K+ followers', sub: 'Instagram', icon: '📸' },
-                  { label: '50K followers', sub: 'LinkedIn · #BuildForWhatsNext', icon: '💼' },
-                  { label: '20K alumni', sub: 'LinkedIn community', icon: '🎓' },
-                  { label: 'Top MBA Programs', sub: 'Ranked on LinkedIn', icon: '🏆' },
+                  { label: '12K+ followers', sub: 'Instagram' },
+                  { label: '50K followers', sub: 'LinkedIn · #BuildForWhatsNext' },
+                  { label: '20K alumni', sub: 'LinkedIn community' },
+                  { label: 'Top MBA Programs', sub: 'Ranked on LinkedIn' },
                 ].map(stat => (
                   <span key={stat.label} style={{
                     display: 'inline-flex', alignItems: 'center', gap: '8px',
@@ -119,7 +118,6 @@ export default function About() {
                     borderRadius: '8px',
                     fontSize: '13px',
                   }}>
-                    <span>{stat.icon}</span>
                     <span>
                       <span style={{ fontWeight: 600, color: '#111218' }}>{stat.label}</span>
                       <span style={{ color: '#6B7280', marginLeft: '4px' }}>· {stat.sub}</span>

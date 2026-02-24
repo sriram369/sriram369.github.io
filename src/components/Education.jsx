@@ -8,7 +8,6 @@ const timeline = [
     spec: 'Business Systems',
     school: 'VIT Vellore',
     location: 'Vellore, Tamil Nadu, India',
-    flag: '🇮🇳',
     accent: '#B5860D',
     bg: '#FFFBEB',
     border: 'rgba(181,134,13,0.2)',
@@ -20,7 +19,6 @@ const timeline = [
     spec: 'Computer Science',
     school: 'National University of Singapore',
     location: 'Singapore',
-    flag: '🇸🇬',
     accent: '#0891B2',
     bg: '#F0F9FF',
     border: 'rgba(8,145,178,0.2)',
@@ -32,7 +30,6 @@ const timeline = [
     spec: 'AI & Strategy',
     school: 'Johns Hopkins University',
     location: 'Washington D.C., USA',
-    flag: '🇺🇸',
     accent: '#1A3A52',
     bg: '#EFF6FF',
     border: 'rgba(26,58,82,0.2)',
@@ -171,7 +168,6 @@ export default function Education() {
                     display: 'flex', alignItems: 'center', gap: '8px',
                     marginBottom: '16px', flexWrap: 'wrap',
                   }}>
-                    <span style={{ fontSize: '16px' }}>{item.flag}</span>
                     <span style={{ fontSize: '15px', fontWeight: 600, color: '#1F2937' }}>
                       {item.school}
                     </span>
