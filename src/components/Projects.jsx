@@ -17,6 +17,19 @@ const projects = [
     accentSecondary: 'rgba(181,134,13,0.12)',
   },
   {
+    id: 'finrag',
+    title: 'FinRAG Analyst',
+    tagline: 'Cited, Hallucination-Free Answers Over SEC EDGAR Filings',
+    description:
+      'Production-grade RAG system that lets anyone ask natural language questions about SEC 10-K and 10-Q filings and get accurate, cited answers in seconds. Built a 6-step ingestion pipeline (SEC EDGAR → custom SGML parser → LlamaParse → SentenceSplitter → Cohere embeddings → Qdrant Cloud), Cohere reranking for retrieval precision, and an SSE-powered live ingestion monitor that streams pipeline progress to the browser in real time. Runs entirely on free-tier infrastructure at under $0.002 per query.',
+    tech: ['Python', 'FastAPI', 'Next.js', 'Cohere', 'Qdrant', 'LlamaIndex', 'RAG', 'Docker', 'Railway', 'Vercel'],
+    link: 'https://github.com/sriram369/finrag-analyst',
+    demo: 'https://app-self-one-65.vercel.app',
+    origin: 'Personal Project',
+    accent: 'rgba(16,185,129,0.20)',
+    accentSecondary: 'rgba(8,145,178,0.12)',
+  },
+  {
     id: 'chilly',
     title: 'Chilly — OpenClaw Bot',
     tagline: 'Research Automation with an OpenClaw Robot',
