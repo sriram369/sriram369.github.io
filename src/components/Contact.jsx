@@ -1,23 +1,16 @@
 import { motion } from 'framer-motion'
 import { useIsMobile } from '../hooks/useIsMobile'
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
+}
+
 const socials = [
-  {
-    label: 'LinkedIn',
-    handle: 'Connect on LinkedIn',
-    sub: 'Best way to reach me',
-    href: 'https://www.linkedin.com/in/sriramthota/',
-    primary: true,
-    icon: (
-      <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-      </svg>
-    ),
-  },
   {
     label: 'GitHub',
     handle: 'github.com/sriram369',
-    sub: 'See my code',
+    sub: 'See my code & projects',
     href: 'https://github.com/sriram369',
     icon: (
       <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
@@ -56,55 +49,72 @@ export default function Contact() {
   return (
     <section id="contact" style={{
       padding: isMobile ? '80px 20px' : '120px 40px',
-      background: '#111218',
+      background: '#FAFAF8',
       position: 'relative',
       overflow: 'hidden',
+      minHeight: '100vh',
     }}>
-      {/* Background blobs */}
+      {/* Background accents */}
       <div style={{
-        position: 'absolute', top: '-100px', right: '-100px',
-        width: '500px', height: '500px', borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(8,145,178,0.12) 0%, transparent 65%)',
+        position: 'absolute', top: 0, right: 0,
+        width: '40%', height: '100%',
+        background: 'linear-gradient(to left, rgba(8,145,178,0.03), transparent)',
         pointerEvents: 'none',
       }} />
       <div style={{
-        position: 'absolute', bottom: '-80px', left: '10%',
-        width: '350px', height: '350px', borderRadius: '50%',
-        background: 'radial-gradient(ellipse, rgba(181,134,13,0.08) 0%, transparent 65%)',
+        position: 'absolute', bottom: '-80px', left: '5%',
+        width: '400px', height: '400px', borderRadius: '50%',
+        background: 'radial-gradient(ellipse, rgba(196,147,63,0.06) 0%, transparent 65%)',
         pointerEvents: 'none',
       }} />
 
       <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={fadeUp} initial="hidden" whileInView="show"
           viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.7 }}
-          style={{ marginBottom: '48px', textAlign: 'center' }}
+          style={{ marginBottom: '56px' }}
         >
-          <span style={{
-            fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em',
-            textTransform: 'uppercase', color: '#0891B2',
-            marginBottom: '14px', display: 'block',
-          }}>
-            08 — Contact
-          </span>
+          <span className="section-label">07 — Contact</span>
           <h2 className="font-display" style={{
-            fontSize: 'clamp(40px, 5vw, 68px)',
+            fontSize: 'clamp(40px, 5vw, 64px)',
             fontWeight: 600, lineHeight: 1.05,
-            letterSpacing: '-0.03em', color: '#FAFAF8',
-            marginBottom: '20px',
+            letterSpacing: '-0.03em', color: '#111218',
+            marginTop: '12px', marginBottom: '16px',
           }}>
             Let's Connect
           </h2>
           <p style={{
-            fontSize: '17px', lineHeight: 1.75, color: '#9CA3AF',
-            maxWidth: '440px', margin: '0 auto',
-            letterSpacing: '-0.01em',
+            fontSize: '17px', lineHeight: 1.75, color: '#4B5563',
+            maxWidth: '480px', letterSpacing: '-0.01em',
           }}>
-            Whether you're recruiting, collaborating, or just want to say hi — I'd love to connect.
+            Whether you're recruiting, collaborating, or just want to say hi — I'd love to hear from you.
           </p>
+        </motion.div>
+
+        {/* Availability badge */}
+        <motion.div
+          variants={fadeUp} initial="hidden" whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
+          style={{ marginBottom: '40px' }}
+        >
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: '10px',
+            padding: '10px 18px',
+            background: 'rgba(16,185,129,0.08)',
+            border: '1px solid rgba(16,185,129,0.2)',
+            borderRadius: '10px',
+          }}>
+            <div style={{
+              width: '8px', height: '8px', borderRadius: '50%',
+              background: '#10B981',
+              boxShadow: '0 0 0 3px rgba(16,185,129,0.2)',
+            }} />
+            <span style={{ fontSize: '14px', fontWeight: 500, color: '#065F46' }}>
+              Open to full-time roles — available Summer 2026
+            </span>
+          </div>
         </motion.div>
 
         {/* LinkedIn primary CTA */}
@@ -116,30 +126,37 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          whileHover={{ y: -4, boxShadow: '0 24px 64px rgba(8,145,178,0.25)' }}
+          whileHover={{ y: -3, boxShadow: '0 20px 48px rgba(8,145,178,0.2)' }}
           style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            gap: '14px',
-            padding: isMobile ? '18px 24px' : '22px 40px',
-            background: '#0891B2',
+            display: 'flex', alignItems: 'center',
+            gap: '16px',
+            padding: isMobile ? '20px 24px' : '24px 32px',
+            background: '#111218',
             borderRadius: '16px',
             marginBottom: '16px',
             textDecoration: 'none',
             transition: 'all 0.25s ease',
           }}
         >
-          <svg width="26" height="26" fill="white" viewBox="0 0 24 24">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-          </svg>
-          <div>
-            <div style={{ fontSize: '18px', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em' }}>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '12px',
+            background: '#0891B2',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            </svg>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: '17px', fontWeight: 700, color: '#FAFAF8', letterSpacing: '-0.01em' }}>
               Connect on LinkedIn
             </div>
-            <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>
+            <div style={{ fontSize: '13px', color: '#6B7280', marginTop: '2px' }}>
               linkedin.com/in/sriramthota
             </div>
           </div>
-          <svg style={{ marginLeft: 'auto' }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0891B2" strokeWidth="2">
             <path d="M7 17L17 7M17 7H7M17 7v10" />
           </svg>
         </motion.a>
@@ -149,8 +166,9 @@ export default function Contact() {
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: '12px',
+          marginBottom: '48px',
         }}>
-          {socials.slice(1).map((link, i) => (
+          {socials.map((link, i) => (
             <motion.a
               key={link.label}
               href={link.href}
@@ -160,24 +178,20 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 + i * 0.08 }}
+              whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(8,145,178,0.1)' }}
               style={{
                 display: 'flex', alignItems: 'center', gap: '14px',
                 padding: '18px 20px',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
+                background: '#F0F9FF',
+                border: '1px solid rgba(8,145,178,0.15)',
                 borderRadius: '14px',
                 textDecoration: 'none',
                 transition: 'all 0.2s ease',
               }}
-              whileHover={{
-                background: 'rgba(8,145,178,0.10)',
-                borderColor: 'rgba(8,145,178,0.25)',
-                x: isMobile ? 0 : 4,
-              }}
             >
               <span style={{ color: '#0891B2', flexShrink: 0 }}>{link.icon}</span>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '13px', fontWeight: 600, color: '#E5E7EB', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#111218', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {link.handle}
                 </div>
                 <div style={{ fontSize: '12px', color: '#6B7280' }}>{link.sub}</div>
@@ -185,6 +199,57 @@ export default function Contact() {
             </motion.a>
           ))}
         </div>
+
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid #E4E0D8', marginBottom: '40px' }} />
+
+        {/* Quote / closing note */}
+        <motion.div
+          variants={fadeUp} initial="hidden" whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          style={{
+            padding: '32px',
+            background: '#111218',
+            borderRadius: '16px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <div style={{
+            position: 'absolute', top: '-30px', right: '-30px',
+            width: '140px', height: '140px', borderRadius: '50%',
+            background: 'rgba(8,145,178,0.12)',
+            pointerEvents: 'none',
+          }} />
+          <div className="font-display" style={{
+            fontSize: '48px', color: '#0891B2', lineHeight: 1,
+            marginBottom: '12px', fontWeight: 300,
+          }}>
+            "
+          </div>
+          <p style={{
+            fontSize: '17px', lineHeight: 1.7,
+            color: '#E5E7EB', fontStyle: 'italic',
+            letterSpacing: '-0.01em', maxWidth: '560px',
+            marginBottom: '20px',
+          }}>
+            I'm always up for building something meaningful. Let's make it happen.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '36px', height: '36px', borderRadius: '50%',
+              background: '#0891B2',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <span className="font-display" style={{ fontSize: '16px', fontWeight: 600, color: '#fff' }}>S</span>
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', fontWeight: 600, color: '#FAFAF8' }}>Sriram Naidu Thota</div>
+              <div style={{ fontSize: '12px', color: '#6B7280' }}>M.S. ISAI · Johns Hopkins University</div>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   )
