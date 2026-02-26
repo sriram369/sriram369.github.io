@@ -34,7 +34,7 @@ const projects = [
     title: 'Chilly — OpenClaw Bot',
     tagline: 'Multi-Agent Equity Research System with LangGraph',
     description:
-      'Orchestrated 6 specialized finance agents (Market Data, Technical Analysis, SEC RAG, ML Prediction, Sentiment, and Risk & Execution) using LangGraph with reflection loops. Integrated production FinRAG Analyst for SEC-grounded insights and generated complete equity research reports in under 90 seconds with PDF and Telegram export. Achieved 94% human-rated report quality and 92% directional accuracy on Gradient-Boosting predictions through rigorous backtesting and cost tracking.',
+      'Chilly is an OpenClaw bot that orchestrates 6 specialized finance agents (Market Data, Technical Analysis, SEC RAG, ML Prediction, Sentiment, Risk & Execution) via LangGraph to generate full equity research reports in under 90 seconds — 94% human-rated quality, 92% directional accuracy, with PDF and Telegram export.',
     tech: ['LangGraph', 'Multi-Agent AI', 'Python', 'RAG', 'Gradient Boosting', 'Telegram API'],
     link: 'https://github.com/sriram369/Chilly',
     origin: 'Personal Project',
