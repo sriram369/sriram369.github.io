@@ -11,8 +11,7 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 
 const pages = {
-  home: Hero,
-  about: About,
+  home: null, // handled separately — renders Hero + About
   experience: Experience,
   education: Education,
   projects: Projects,
@@ -23,17 +22,25 @@ const pages = {
 
 export default function App() {
   const [activePage, setActivePage] = useState('home')
-  const PageComponent = pages[activePage] || Hero
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [activePage])
 
+  const PageComponent = pages[activePage]
+
   return (
     <div style={{ minHeight: '100vh', background: '#FAFAF8' }}>
       <Navbar activePage={activePage} setActivePage={setActivePage} />
       <main>
-        <PageComponent />
+        {activePage === 'home' ? (
+          <>
+            <Hero />
+            <About />
+          </>
+        ) : (
+          PageComponent && <PageComponent />
+        )}
       </main>
       <Footer />
     </div>
