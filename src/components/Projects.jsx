@@ -32,10 +32,10 @@ const projects = [
   {
     id: 'chilly',
     title: 'Chilly — OpenClaw Bot',
-    tagline: 'Research Automation with an OpenClaw Robot',
+    tagline: 'Multi-Agent Equity Research System with LangGraph',
     description:
-      'Built Chilly, an OpenClaw robot designed to automate repetitive research tasks — handling physical interactions so researchers can focus on higher-order work. A hands-on exploration of robotics and automation.',
-    tech: ['Robotics', 'Python', 'Automation', 'Hardware'],
+      'Orchestrated 6 specialized finance agents (Market Data, Technical Analysis, SEC RAG, ML Prediction, Sentiment, and Risk & Execution) using LangGraph with reflection loops. Integrated production FinRAG Analyst for SEC-grounded insights and generated complete equity research reports in under 90 seconds with PDF and Telegram export. Achieved 94% human-rated report quality and 92% directional accuracy on Gradient-Boosting predictions through rigorous backtesting and cost tracking.',
+    tech: ['LangGraph', 'Multi-Agent AI', 'Python', 'RAG', 'Gradient Boosting', 'Telegram API'],
     link: 'https://github.com/sriram369/Chilly',
     origin: 'Personal Project',
     accent: 'rgba(99,102,241,0.18)',
