@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const links = ['About', 'Experience', 'Education', 'Projects', 'Coursework', 'Certifications', 'Contact']
 
-export default function Navbar() {
+export default function Navbar({ activePage, setActivePage }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -11,6 +11,11 @@ export default function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const navigate = (page) => {
+    setActivePage(page)
+    setMenuOpen(false)
+  }
 
   return (
     <>
@@ -30,24 +35,49 @@ export default function Navbar() {
         borderBottom: scrolled || menuOpen ? '1px solid rgba(228, 224, 216, 0.7)' : 'none',
       }}>
         {/* Logo */}
-        <a href="#" className="font-display" style={{
-          fontSize: '24px',
-          fontWeight: 600,
-          color: '#111218',
-          textDecoration: 'none',
-          letterSpacing: '-0.03em',
-          lineHeight: 1,
-        }}>
+        <button
+          onClick={() => navigate('home')}
+          className="font-display"
+          style={{
+            fontSize: '24px',
+            fontWeight: 600,
+            color: '#111218',
+            textDecoration: 'none',
+            letterSpacing: '-0.03em',
+            lineHeight: 1,
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
           SN<span style={{ color: '#0891B2' }}>.</span>
-        </a>
+        </button>
 
         {/* Desktop links */}
         <div className="nav-links-desktop" style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-          {links.map(link => (
-            <a key={link} href={`#${link.toLowerCase()}`} className="nav-link">
-              {link}
-            </a>
-          ))}
+          {links.map(link => {
+            const pageKey = link.toLowerCase()
+            const isActive = activePage === pageKey
+            return (
+              <button
+                key={link}
+                onClick={() => navigate(pageKey)}
+                className="nav-link"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                  color: isActive ? '#0891B2' : undefined,
+                  borderBottom: isActive ? '1px solid #0891B2' : undefined,
+                  paddingBottom: isActive ? '2px' : undefined,
+                }}
+              >
+                {link}
+              </button>
+            )
+          })}
         </div>
 
         {/* Hamburger — hidden on desktop via CSS */}
@@ -90,27 +120,34 @@ export default function Navbar() {
           borderBottom: '1px solid rgba(228,224,216,0.7)',
           padding: '8px 0 16px',
         }}>
-          {links.map(link => (
-            <a
-              key={link}
-              href={`#${link.toLowerCase()}`}
-              onClick={() => setMenuOpen(false)}
-              style={{
-                display: 'block',
-                padding: '14px 24px',
-                fontSize: '16px',
-                fontWeight: 500,
-                color: '#374151',
-                textDecoration: 'none',
-                borderBottom: '1px solid rgba(228,224,216,0.4)',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = '#0891B2'}
-              onMouseLeave={e => e.currentTarget.style.color = '#374151'}
-            >
-              {link}
-            </a>
-          ))}
+          {links.map(link => {
+            const pageKey = link.toLowerCase()
+            const isActive = activePage === pageKey
+            return (
+              <button
+                key={link}
+                onClick={() => navigate(pageKey)}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '14px 24px',
+                  fontSize: '16px',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? '#0891B2' : '#374151',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '1px solid rgba(228,224,216,0.4)',
+                  cursor: 'pointer',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#0891B2' }}
+                onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = '#374151' }}
+              >
+                {link}
+              </button>
+            )
+          })}
         </div>
       )}
     </>
