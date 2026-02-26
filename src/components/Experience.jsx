@@ -3,6 +3,30 @@ import { useIsMobile } from '../hooks/useIsMobile'
 
 const experiences = [
   {
+    role: 'Open-Source Contributor',
+    company: '🦞 OpenClaw',
+    companyLink: 'https://github.com/OpenClaw/OpenClaw',
+    companySuffix: '232k+ stars',
+    logo: 'https://github.com/openclaw.png',
+    period: 'Feb 2026',
+    location: 'Remote',
+    bullets: [
+      [
+        { text: 'Implemented production-grade base64 image validation in ' },
+        { text: 'src/agents/tool-images.ts', href: 'https://github.com/OpenClaw/OpenClaw/blob/main/src/agents/tool-images.ts' },
+        { text: ' to prevent Anthropic API-induced session corruption in live agent workflows (' },
+        { text: 'PR #18263', href: 'https://github.com/OpenClaw/OpenClaw/pull/18263' },
+        { text: ', merged to main).' },
+      ],
+      [{ text: 'Added validateAndNormalizeBase64() with regex, padding checks, and URL-safe normalization; replaced invalid images with graceful text fallbacks.' }],
+      [{ text: 'Wrote and maintained 5 new end-to-end tests covering edge cases across the full validation pipeline.' }],
+    ],
+    tags: ['TypeScript', 'Anthropic API', 'Open Source', 'Testing'],
+    accent: 'rgba(16,185,129,0.20)',
+    accentSecondary: 'rgba(99,102,241,0.10)',
+    color: '#10B981',
+  },
+  {
     role: 'Social Media Head',
     company: 'Johns Hopkins University — DC Campus',
     logo: 'https://logo.clearbit.com/jhu.edu',
@@ -132,7 +156,18 @@ export default function Experience() {
                         fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em',
                         textTransform: 'uppercase', color: exp.color,
                       }}>
-                        {exp.company}
+                        {exp.companyLink ? (
+                          <a href={exp.companyLink} target="_blank" rel="noopener noreferrer"
+                            style={{ color: exp.color, textDecoration: 'none' }}
+                            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                          >{exp.company}</a>
+                        ) : exp.company}
+                        {exp.companySuffix && (
+                          <span style={{ color: '#6B7280', fontWeight: 500, marginLeft: '6px', letterSpacing: '0.05em' }}>
+                            — {exp.companySuffix}
+                          </span>
+                        )}
                       </span>
                     </div>
                     <h3 className="font-display" style={{
@@ -157,13 +192,38 @@ export default function Experience() {
                 </div>
 
                 {/* Description */}
-                <p style={{
-                  fontSize: '15px', lineHeight: 1.75, color: '#D1D5DB',
-                  maxWidth: '720px', marginBottom: exp.link ? '12px' : '24px',
-                  letterSpacing: '-0.005em',
-                }}>
-                  {exp.description}
-                </p>
+                {exp.bullets ? (
+                  <ul style={{
+                    fontSize: '15px', lineHeight: 1.75, color: '#D1D5DB',
+                    maxWidth: '720px', marginBottom: exp.link ? '12px' : '24px',
+                    letterSpacing: '-0.005em', paddingLeft: '18px',
+                    display: 'flex', flexDirection: 'column', gap: '6px',
+                  }}>
+                    {exp.bullets.map((segments, bi) => (
+                      <li key={bi}>
+                        {segments.map((seg, si) =>
+                          seg.href ? (
+                            <a key={si} href={seg.href} target="_blank" rel="noopener noreferrer"
+                              style={{ color: '#38BDF8', textDecoration: 'none', fontWeight: 500 }}
+                              onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                              onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                            >{seg.text}</a>
+                          ) : (
+                            <span key={si}>{seg.text}</span>
+                          )
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p style={{
+                    fontSize: '15px', lineHeight: 1.75, color: '#D1D5DB',
+                    maxWidth: '720px', marginBottom: exp.link ? '12px' : '24px',
+                    letterSpacing: '-0.005em',
+                  }}>
+                    {exp.description}
+                  </p>
+                )}
 
                 {/* External link */}
                 {exp.link && (
