@@ -76,7 +76,7 @@ export default function Contact() {
           viewport={{ once: true, margin: '-80px' }}
           style={{ marginBottom: '56px' }}
         >
-          <span className="section-label">07 — Contact</span>
+          <span className="section-label">09 — Contact</span>
           <h2 className="font-display" style={{
             fontSize: 'clamp(40px, 5vw, 64px)',
             fontWeight: 600, lineHeight: 1.05,

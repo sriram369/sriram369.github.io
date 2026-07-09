@@ -4,6 +4,7 @@
 skills-lock.json
 
 # Private files
+private/
 sriram_portfolio_prd*
 AuraPath_Report.pdf
 forest\ management\ .pdf

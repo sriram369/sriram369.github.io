@@ -31,7 +31,7 @@ export default function Certifications() {
           transition={{ duration: 0.7 }}
           style={{ marginBottom: '40px' }}
         >
-          <span className="section-label">07 — Certifications</span>
+          <span className="section-label">08 — Certifications</span>
           <h2 className="font-display" style={{
             fontSize: 'clamp(40px, 5vw, 64px)',
             fontWeight: 600, lineHeight: 1.05,

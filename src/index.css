@@ -150,7 +150,7 @@ input:focus, textarea:focus {
 }
 
 /* ── Mobile responsive ── */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .nav-links-desktop { display: none !important; }
   .nav-hamburger { display: flex !important; }
 }

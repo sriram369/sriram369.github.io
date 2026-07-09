@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 
-const links = ['Experience', 'Education', 'Projects', 'Coursework', 'Certifications', 'Contact']
+const links = ['Experience', 'Education', 'Projects', 'Achievements', 'Coursework', 'Certifications', 'Contact']
 
-export default function Navbar({ activePage, setActivePage }) {
+export default function Navbar({ activePage, navigate }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -12,8 +12,8 @@ export default function Navbar({ activePage, setActivePage }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const navigate = (page) => {
-    setActivePage(page)
+  const handleNavigate = (page) => {
+    navigate(page)
     setMenuOpen(false)
   }
 
@@ -36,7 +36,8 @@ export default function Navbar({ activePage, setActivePage }) {
       }}>
         {/* Logo */}
         <button
-          onClick={() => navigate('home')}
+          onClick={() => handleNavigate('home')}
+          aria-label="Go to home"
           className="font-display"
           style={{
             fontSize: '24px',
@@ -62,8 +63,9 @@ export default function Navbar({ activePage, setActivePage }) {
             return (
               <button
                 key={link}
-                onClick={() => navigate(pageKey)}
+                onClick={() => handleNavigate(pageKey)}
                 className="nav-link"
+                aria-current={isActive ? 'page' : undefined}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -126,7 +128,8 @@ export default function Navbar({ activePage, setActivePage }) {
             return (
               <button
                 key={link}
-                onClick={() => navigate(pageKey)}
+                onClick={() => handleNavigate(pageKey)}
+                aria-current={isActive ? 'page' : undefined}
                 style={{
                   display: 'block',
                   width: '100%',

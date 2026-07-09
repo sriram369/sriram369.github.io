@@ -408,7 +408,7 @@ export default function Coursework() {
           transition={{ duration: 0.7 }}
           style={{ marginBottom: '56px' }}
         >
-          <span className="section-label">06 — Coursework</span>
+          <span className="section-label">07 — Coursework</span>
           <h2 className="font-display" style={{
             fontSize: 'clamp(40px, 5vw, 64px)',
             fontWeight: 600, lineHeight: 1.05,
