@@ -5,7 +5,6 @@ import About from './components/About'
 import Experience from './components/Experience'
 import Education from './components/Education'
 import Projects from './components/Projects'
-import Achievements from './components/Achievements'
 import Coursework from './components/Coursework'
 import Certifications from './components/Certifications'
 import Contact from './components/Contact'
@@ -16,7 +15,6 @@ const pages = {
   experience: Experience,
   education: Education,
   projects: Projects,
-  achievements: Achievements,
   coursework: Coursework,
   certifications: Certifications,
   contact: Contact,
@@ -39,10 +37,6 @@ const pageMeta = {
   projects: {
     title: 'Projects | Sriram Naidu Thota',
     description: 'Selected AI, data science, RAG, computer vision, and multi-agent projects by Sriram Naidu Thota.',
-  },
-  achievements: {
-    title: 'Proof Trail | Sriram Naidu Thota',
-    description: "A public evidence layer of Sriram Naidu Thota's applied AI work, open-source contributions, leadership, and academic signals.",
   },
   coursework: {
     title: 'Coursework | Sriram Naidu Thota',
