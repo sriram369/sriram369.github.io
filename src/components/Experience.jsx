@@ -2,6 +2,75 @@ import { motion } from 'framer-motion'
 import { useIsMobile } from '../hooks/useIsMobile'
 
 const experiences = [
+{
+  "role": "Software Engineer | Full-Stack, Backend & Applied AI",
+  "company": "Nouveau Elevator Industries",
+  "period": "Aug 2026 – Present",
+  "location": "Long Island City, NY",
+  "bullets": [
+    [
+      {
+        "text": "Design, develop, test, and deploy secure enterprise applications across React/Next.js, Node.js, Prisma, PostgreSQL, and REST APIs, translating business requirements into production features for a custom multi-module ERP."
+      }
+    ],
+    [
+      {
+        "text": "Built and productionized a Gemini-powered ERP copilot integrating application data and knowledge sources with tenant-aware access controls, a 22-table allowlist, sensitive-field masking, citations, and server-owned prompts."
+      }
+    ],
+    [
+      {
+        "text": "Resolved production defects and security gaps across shared services, closing cross-tenant read/write paths across 128 FK-derived tables and 27 unscoped lookups through reusable tenant-aware data-access patterns."
+      }
+    ],
+    [
+      {
+        "text": "Improved reliability for 28 scheduled jobs across three VMs by tracing one job executing 109 times in 37 minutes and implementing PostgreSQL advisory locks; documented failure modes and support procedures."
+      }
+    ]
+  ],
+  "tags": [
+    "React",
+    "Next.js",
+    "Node.js",
+    "Prisma",
+    "PostgreSQL",
+    "Gemini",
+    "ERP"
+  ],
+  "accent": "rgba(8,145,178,0.20)",
+  "accentSecondary": "rgba(99,102,241,0.10)",
+  "color": "#38BDF8"
+},
+{
+  "role": "AI Product Consultant | Johns Hopkins IT Consulting Lab",
+  "company": "PracticeLink & Ridgeline Agency",
+  "period": "Jan 2026 – May 2026",
+  "location": "Washington, DC / Remote",
+  "bullets": [
+    [
+      {
+        "text": "Developed two Next.js/TypeScript applications from requirements gathering through working demos, translating AI-adoption, support, governance, and data-sensitivity requirements into scalable product logic."
+      }
+    ],
+    [
+      {
+        "text": "Implemented recommendation, readiness-scoring, and AI/hybrid/human routing logic; incorporated stakeholder feedback, tested workflows, maintained technical documentation, and communicated decisions across technical and non-technical teams."
+      }
+    ]
+  ],
+  "tags": [
+    "Next.js",
+    "TypeScript",
+    "AI Product",
+    "Requirements Gathering",
+    "Testing",
+    "Technical Documentation"
+  ],
+  "accent": "rgba(99,102,241,0.18)",
+  "accentSecondary": "rgba(8,145,178,0.10)",
+  "color": "#A5B4FC"
+},
   {
     role: 'Open-Source Contributor',
     company: '🦞 OpenClaw',
@@ -39,15 +108,15 @@ const experiences = [
     color: '#0891B2',
   },
   {
-    role: 'AI Engineering Intern',
-    company: 'Ola — Krutrim AI',
+    role: 'AI Prompt Engineering Intern',
+    company: 'Krutrim SI / Ola Electric',
     logo: 'https://logo.clearbit.com/olacabs.com',
     period: 'Aug 2023 – Nov 2023',
-    location: 'India',
-    description: 'Worked within Ola\'s Krutrim AI division on building and refining large language models. Focused on LLM fine-tuning and prompt engineering to improve model accuracy and responsiveness — with a strong emphasis on making the models multilingual to serve India\'s diverse linguistic landscape.',
+    location: 'Bengaluru, India',
+    description: 'Engineered and evaluated multilingual LLM workflows across four Indian languages using prompt templates, structured outputs, instruction-response datasets, and adversarial safety cases to improve quality and reliability.',
     link: 'https://kruti.ai',
     linkLabel: 'kruti.ai',
-    tags: ['LLM Fine-Tuning', 'Prompt Engineering', 'Multilingual AI', 'Python', 'NLP'],
+    tags: ['Prompt Engineering', 'Multilingual AI', 'LLM Evaluation', 'Python', 'NLP'],
     accent: 'rgba(245,158,11,0.18)',
     accentSecondary: 'rgba(8,145,178,0.10)',
     color: '#B5860D',
