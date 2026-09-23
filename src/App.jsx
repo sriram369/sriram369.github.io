@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import About from './components/About'
+// import About from './components/About' // hidden for now — kept for later use
 import Experience from './components/Experience'
 import Education from './components/Education'
 import Projects from './components/Projects'
 import Coursework from './components/Coursework'
 import Certifications from './components/Certifications'
 import Contact from './components/Contact'
-import Footer from './components/Footer'
+// import SriChat from './components/SriChat' // hidden for now — kept for later use
+// import Footer from './components/Footer' // hidden for now — kept for later use
 
 const pages = {
   home: null, // handled separately — renders Hero + About
@@ -106,15 +107,11 @@ export default function App() {
       <Navbar activePage={activePage} navigate={navigate} />
       <main>
         {activePage === 'home' ? (
-          <>
-            <Hero />
-            <About />
-          </>
+          <Hero />
         ) : (
           PageComponent && <PageComponent />
         )}
       </main>
-      <Footer />
     </div>
   )
 }

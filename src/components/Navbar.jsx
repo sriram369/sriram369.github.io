@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 
-const links = ['Experience', 'Education', 'Projects', 'Coursework', 'Certifications', 'Contact']
+const links = [
+  { label: 'Work', key: 'experience' },
+  { label: 'Education', key: 'education' },
+  { label: 'Projects', key: 'projects' },
+]
 
 export default function Navbar({ activePage, navigate }) {
   const [scrolled, setScrolled] = useState(false)
@@ -40,29 +44,29 @@ export default function Navbar({ activePage, navigate }) {
           aria-label="Go to home"
           className="font-display"
           style={{
-            fontSize: '24px',
+            fontSize: '18px',
             fontWeight: 600,
             color: '#111218',
             textDecoration: 'none',
-            letterSpacing: '-0.03em',
+            letterSpacing: '-0.02em',
             lineHeight: 1,
             background: 'none',
             border: 'none',
             cursor: 'pointer',
             padding: 0,
+            whiteSpace: 'nowrap',
           }}
         >
-          SN<span style={{ color: '#0891B2' }}>.</span>
+          Sriram Naidu Thota<span style={{ color: '#0891B2' }}>.</span>
         </button>
 
         {/* Desktop links */}
         <div className="nav-links-desktop" style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-          {links.map(link => {
-            const pageKey = link.toLowerCase()
+          {links.map(({ label, key: pageKey }) => {
             const isActive = activePage === pageKey
             return (
               <button
-                key={link}
+                key={pageKey}
                 onClick={() => handleNavigate(pageKey)}
                 className="nav-link"
                 aria-current={isActive ? 'page' : undefined}
@@ -76,7 +80,7 @@ export default function Navbar({ activePage, navigate }) {
                   paddingBottom: isActive ? '2px' : undefined,
                 }}
               >
-                {link}
+                {label}
               </button>
             )
           })}
@@ -122,12 +126,11 @@ export default function Navbar({ activePage, navigate }) {
           borderBottom: '1px solid rgba(228,224,216,0.7)',
           padding: '8px 0 16px',
         }}>
-          {links.map(link => {
-            const pageKey = link.toLowerCase()
+          {links.map(({ label, key: pageKey }) => {
             const isActive = activePage === pageKey
             return (
               <button
-                key={link}
+                key={pageKey}
                 onClick={() => handleNavigate(pageKey)}
                 aria-current={isActive ? 'page' : undefined}
                 style={{
@@ -147,7 +150,7 @@ export default function Navbar({ activePage, navigate }) {
                 onMouseEnter={e => { if (!isActive) e.currentTarget.style.color = '#0891B2' }}
                 onMouseLeave={e => { if (!isActive) e.currentTarget.style.color = '#374151' }}
               >
-                {link}
+                {label}
               </button>
             )
           })}

@@ -1,6 +1,7 @@
 # Claude Code internals
 .agents/
 .claude/
+.omc/
 skills-lock.json
 
 # Private files
@@ -24,6 +25,8 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.vercel
 
 # Editor directories and files
 .vscode/*

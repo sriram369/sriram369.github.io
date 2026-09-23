@@ -3,40 +3,35 @@ import { useIsMobile } from '../hooks/useIsMobile'
 
 const experiences = [
 {
-  "role": "Software Engineer | Full-Stack, Backend & Applied AI",
+  "role": "Software Engineer | Full-Stack & Applied AI",
   "company": "Nouveau Elevator Industries",
+  "logo": "/nouveau-favicon.jpg",
   "period": "Aug 2026 – Present",
   "location": "Long Island City, NY",
   "bullets": [
     [
       {
-        "text": "Design, develop, test, and deploy secure enterprise applications across React/Next.js, Node.js, Prisma, PostgreSQL, and REST APIs, translating business requirements into production features for a custom multi-module ERP."
+        "text": "Partnered with finance stakeholders to define billing requirements and shipped a production system for approvals, invoicing, and payment tracking using React, Node.js, and PostgreSQL."
       }
     ],
     [
       {
-        "text": "Built and productionized a Gemini-powered ERP copilot integrating application data and knowledge sources with tenant-aware access controls, a 22-table allowlist, sensitive-field masking, citations, and server-owned prompts."
+        "text": "Built and deployed an AI assistant for form entry and human-approved worker assignments, cutting workflow time from ~5 minutes to ~30 seconds (~90%); incorporated source citations and role-based data access."
       }
     ],
     [
       {
-        "text": "Resolved production defects and security gaps across shared services, closing cross-tenant read/write paths across 128 FK-derived tables and 27 unscoped lookups through reusable tenant-aware data-access patterns."
-      }
-    ],
-    [
-      {
-        "text": "Improved reliability for 28 scheduled jobs across three VMs by tracing one job executing 109 times in 37 minutes and implementing PostgreSQL advisory locks; documented failure modes and support procedures."
+        "text": "Identified support-workflow gaps and built request intake, routing by service-level targets, on-call escalation, notifications, and manager reporting to track unresolved customer requests."
       }
     ]
   ],
   "tags": [
     "React",
-    "Next.js",
     "Node.js",
     "Prisma",
     "PostgreSQL",
-    "Gemini",
-    "ERP"
+    "Vertex AI",
+    "Billing"
   ],
   "accent": "rgba(8,145,178,0.20)",
   "accentSecondary": "rgba(99,102,241,0.10)",
@@ -45,19 +40,32 @@ const experiences = [
 {
   "role": "AI Product Consultant | Johns Hopkins IT Consulting Lab",
   "company": "PracticeLink & Ridgeline Agency",
+  "companyLinks": [
+    { "text": "PracticeLink", "href": "https://practicelink-ai-artificial-iq.vercel.app/" },
+    { "text": "Ridgeline Agency", "href": "https://ridgelinescoresriram.vercel.app/" }
+  ],
   "period": "Jan 2026 – May 2026",
   "location": "Washington, DC / Remote",
   "bullets": [
     [
       {
-        "text": "Developed two Next.js/TypeScript applications from requirements gathering through working demos, translating AI-adoption, support, governance, and data-sensitivity requirements into scalable product logic."
-      }
-    ],
-    [
-      {
-        "text": "Implemented recommendation, readiness-scoring, and AI/hybrid/human routing logic; incorporated stakeholder feedback, tested workflows, maintained technical documentation, and communicated decisions across technical and non-technical teams."
+        "text": "A pro-bono consulting case through JHU's IT Consulting Lab course — two companies wanted to get more AI-adaptive, and we guided them on the right AI tools, agents, and adoption roadmap for their teams."
       }
     ]
+  ],
+  "projectLinks": [
+    {
+      "name": "PracticeLink",
+      "favicon": "/practicelink-favicon.svg",
+      "demoHref": "https://practicelink-ai-artificial-iq.vercel.app/",
+      "repoHref": "https://github.com/sriram369/practicelink-ai-adoption-hub"
+    },
+    {
+      "name": "Ridgeline Agency",
+      "favicon": null,
+      "demoHref": "https://ridgelinescoresriram.vercel.app/",
+      "repoHref": "https://github.com/sriram369/ridgeline-ai-cx-strategy-hub"
+    }
   ],
   "tags": [
     "Next.js",
@@ -98,10 +106,23 @@ const experiences = [
   {
     role: 'Social Media Head',
     company: 'Johns Hopkins University — DC Campus',
-    logo: 'https://logo.clearbit.com/jhu.edu',
+    logo: '/jhu-favicon.png',
     period: '2025 – Present',
     location: 'Washington D.C., USA',
-    description: 'Leading social media strategy and content creation for the JHU Carey DC Campus. Grew the Instagram account to 12K+ followers and manage a 50K LinkedIn community of students, alumni, and industry professionals. Championing the #BuildForWhatsNext brand and driving engagement across platforms — while coordinating with faculty and administrators to amplify the school\'s voice.',
+    bullets: [
+      [{ text: "Sole social media lead for strategy and content creation across the JHU Carey DC Campus." }],
+      [
+        { text: 'Grew the ' },
+        { text: 'Instagram', href: 'https://www.instagram.com/jhucarey/' },
+        { text: ' following by ~20%, from 10K to 12K+ followers.' },
+      ],
+      [
+        { text: 'Managing a 50K-member ' },
+        { text: 'LinkedIn', href: 'https://www.linkedin.com/school/jhucarey/' },
+        { text: ' community of students, alumni, and industry professionals.' },
+      ],
+      [{ text: "Coordinating with faculty and administrators to amplify the school's voice and drive engagement." }],
+    ],
     tags: ['Social Media Strategy', 'Content Creation', 'Brand Management', 'LinkedIn', 'Instagram', 'Community Growth'],
     accent: 'rgba(8,145,178,0.20)',
     accentSecondary: 'rgba(181,134,13,0.10)',
@@ -110,7 +131,7 @@ const experiences = [
   {
     role: 'AI Prompt Engineering Intern',
     company: 'Krutrim SI / Ola Electric',
-    logo: 'https://logo.clearbit.com/olacabs.com',
+    logo: '/ola-favicon.png',
     period: 'Aug 2023 – Nov 2023',
     location: 'Bengaluru, India',
     description: 'Engineered and evaluated multilingual LLM workflows across four Indian languages using prompt templates, structured outputs, instruction-response datasets, and adversarial safety cases to improve quality and reliability.',
@@ -124,7 +145,7 @@ const experiences = [
   {
     role: 'AI Product Discovery Intern',
     company: 'Paragon One (now Extern)',
-    logo: 'https://logo.clearbit.com/extern.com',
+    logo: '/extern-favicon.png',
     period: 'Remote',
     location: 'Remote',
     description: 'Drove product strategy by analyzing qualitative customer feedback and user behavior data to identify key pain points and strategic pivots. Translated insights into actionable engineering requirements and authored clear technical documentation for stakeholders, directly influencing the product roadmap.',
@@ -148,19 +169,16 @@ export default function Experience() {
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
           style={{ marginBottom: '56px' }}
         >
-          <span className="section-label">03 — Experience</span>
           <h2 className="font-display" style={{
             fontSize: 'clamp(40px, 5vw, 64px)',
             fontWeight: 600, lineHeight: 1.05,
             letterSpacing: '-0.03em', color: '#111218',
-            marginTop: '12px',
           }}>
-            Work Experience
+            Work
           </h2>
         </motion.div>
 
@@ -225,7 +243,18 @@ export default function Experience() {
                         fontSize: '11px', fontWeight: 600, letterSpacing: '0.12em',
                         textTransform: 'uppercase', color: exp.color,
                       }}>
-                        {exp.companyLink ? (
+                        {exp.companyLinks ? (
+                          exp.companyLinks.map((part, pi) => (
+                            <span key={part.text}>
+                              <a href={part.href} target="_blank" rel="noopener noreferrer"
+                                style={{ color: exp.color, textDecoration: 'none' }}
+                                onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                                onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                              >{part.text}</a>
+                              {pi < exp.companyLinks.length - 1 && ' & '}
+                            </span>
+                          ))
+                        ) : exp.companyLink ? (
                           <a href={exp.companyLink} target="_blank" rel="noopener noreferrer"
                             style={{ color: exp.color, textDecoration: 'none' }}
                             onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
@@ -266,6 +295,7 @@ export default function Experience() {
                     fontSize: '15px', lineHeight: 1.75, color: '#D1D5DB',
                     maxWidth: '720px', marginBottom: exp.link ? '12px' : '24px',
                     letterSpacing: '-0.005em', paddingLeft: '18px',
+                    listStyleType: 'disc', listStylePosition: 'outside',
                     display: 'flex', flexDirection: 'column', gap: '6px',
                   }}>
                     {exp.bullets.map((segments, bi) => (
@@ -292,6 +322,56 @@ export default function Experience() {
                   }}>
                     {exp.description}
                   </p>
+                )}
+
+                {/* Project links */}
+                {exp.projectLinks && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+                    {exp.projectLinks.map(pl => (
+                      <div key={pl.name} style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        {pl.favicon ? (
+                          <img
+                            src={pl.favicon}
+                            alt={pl.name}
+                            style={{
+                              width: '18px', height: '18px', borderRadius: '4px',
+                              objectFit: 'contain', background: 'rgba(255,255,255,0.9)', padding: '2px',
+                              flexShrink: 0,
+                            }}
+                          />
+                        ) : (
+                          <span style={{
+                            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                            width: '18px', height: '18px', borderRadius: '4px',
+                            background: exp.color, color: '#111218',
+                            fontSize: '9px', fontWeight: 700, flexShrink: 0,
+                          }}>
+                            {pl.name.charAt(0)}
+                          </span>
+                        )}
+                        <a href={pl.demoHref} target="_blank" rel="noopener noreferrer"
+                          style={{ fontSize: '14px', fontWeight: 500, color: '#D1D5DB', textDecoration: 'none' }}
+                          onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                          onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                        >
+                          {pl.name}
+                        </a>
+                        <span style={{ color: '#4B5563', fontSize: '13px' }}>·</span>
+                        <img
+                          src="/github-favicon.png"
+                          alt=""
+                          style={{ width: '14px', height: '14px', borderRadius: '3px', flexShrink: 0 }}
+                        />
+                        <a href={pl.repoHref} target="_blank" rel="noopener noreferrer"
+                          style={{ fontSize: '13px', fontWeight: 500, color: '#9CA3AF', textDecoration: 'none' }}
+                          onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                          onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+                        >
+                          GitHub
+                        </a>
+                      </div>
+                    ))}
+                  </div>
                 )}
 
                 {/* External link */}

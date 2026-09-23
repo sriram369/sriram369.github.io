@@ -43,10 +43,6 @@ export default function Footer() {
           </a>
         ))}
       </div>
-
-      <span style={{ fontSize: '12px', color: '#374151' }}>
-        M.S. ISAI · Johns Hopkins University
-      </span>
     </footer>
   )
 }

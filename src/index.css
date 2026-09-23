@@ -149,6 +149,29 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
 }
 
+.projects-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #0891B2 rgba(8, 145, 178, 0.08);
+}
+
+.projects-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.projects-scroll::-webkit-scrollbar-track {
+  background: rgba(8, 145, 178, 0.08);
+  border-radius: 100px;
+}
+
+.projects-scroll::-webkit-scrollbar-thumb {
+  background: #0891B2;
+  border-radius: 100px;
+}
+
+.projects-scroll::-webkit-scrollbar-thumb:hover {
+  background: #0771A2;
+}
+
 /* ── Mobile responsive ── */
 @media (max-width: 960px) {
   .nav-links-desktop { display: none !important; }
