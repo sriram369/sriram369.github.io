@@ -23,9 +23,8 @@ const pages = {
 
 const pageMeta = {
   home: {
-    title: 'Sriram Naidu Thota',
-    description:
-      'Sriram Naidu Thota - AI systems, product strategy, and a public proof trail of applied AI work, open-source contributions, and Johns Hopkins achievements.',
+    title: "Sriram's Website",
+    description: "Sriram's personal website.",
   },
   experience: {
     title: 'Experience | Sriram Naidu Thota',
