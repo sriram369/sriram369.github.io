@@ -1,47 +1,91 @@
-import { useIsMobile } from '../hooks/useIsMobile'
+import { Check, Copy, DownloadSimple } from '@phosphor-icons/react'
+import { profile, socials } from '../data/site'
+import { hrefFor } from '../lib/router'
+import { useCopy } from '../lib/clipboard'
+import { socialIcons } from '../lib/icons'
+import { Container, Reveal } from './ui'
 
-export default function Footer() {
-  const isMobile = useIsMobile()
+const secondary = [
+  { key: 'coursework', label: 'Coursework' },
+  { key: 'certifications', label: 'Certifications' },
+]
+
+export function CopyEmailButton({ className = 'btn btn-primary' }) {
+  const [status, copy] = useCopy()
+  const label = status === 'copied' ? 'Copied' : status === 'failed' ? 'Copy failed' : 'Copy email'
+  return (
+    <button type="button" onClick={() => copy(profile.email)} className={className}>
+      {status === 'copied' ? <Check size={16} weight="bold" aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
+      <span aria-live="polite">{label}</span>
+    </button>
+  )
+}
+
+export default function Footer({ page }) {
+  const showInvite = page !== 'contact'
 
   return (
-    <footer style={{
-      background: '#0D0F18',
-      borderTop: '1px solid rgba(255,255,255,0.06)',
-      padding: isMobile ? '24px 20px' : '32px 40px',
-      display: 'flex',
-      alignItems: isMobile ? 'flex-start' : 'center',
-      justifyContent: 'space-between',
-      flexDirection: isMobile ? 'column' : 'row',
-      flexWrap: 'wrap',
-      gap: '16px',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <span className="font-display" style={{
-          fontSize: '20px', fontWeight: 600,
-          color: '#FAFAF8', letterSpacing: '-0.03em',
-        }}>
-          SN<span style={{ color: '#0891B2' }}>.</span>
-        </span>
-        <span style={{ fontSize: '13px', color: '#4B5563' }}>
-          Sriram Naidu Thota · Washington D.C. · 2026
-        </span>
-      </div>
+    <footer className="mt-24 border-t border-line sm:mt-32">
+      {showInvite && (
+        <Container className="py-16 sm:py-24">
+          <Reveal className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="text-[clamp(2rem,5vw,3.5rem)] font-semibold leading-[1.05] tracking-[-0.035em]">
+                Want to build something together?
+              </h2>
+              <a href={`mailto:${profile.email}`} className="link mt-5 inline-block text-lg text-muted">
+                {profile.email}
+              </a>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-3">
+              <CopyEmailButton />
+              <a href={profile.resume} download="Sriram_Resume.pdf" className="btn btn-ghost">
+                <DownloadSimple size={16} aria-hidden="true" />
+                Resume
+              </a>
+            </div>
+          </Reveal>
+        </Container>
+      )}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
-        {['About', 'Education', 'Projects', 'Contact'].map(link => (
-          <a
-            key={link}
-            href={'#' + link.toLowerCase()}
-            style={{
-              fontSize: '13px', color: '#6B7280',
-              textDecoration: 'none', transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = '#0891B2'}
-            onMouseLeave={e => e.currentTarget.style.color = '#6B7280'}
-          >
-            {link}
-          </a>
-        ))}
+      <div className={showInvite ? 'border-t border-line' : ''}>
+        <Container className="flex flex-col gap-5 py-7 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted">
+            {profile.name}, {profile.location}
+          </p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+            <nav aria-label="More pages" className="flex gap-5 text-sm">
+              {secondary.map(({ key, label }) => (
+                <a
+                  key={key}
+                  href={hrefFor(key)}
+                  aria-current={page === key ? 'page' : undefined}
+                  className="text-muted transition-colors hover:text-ink"
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+            <ul className="-mx-2 flex items-center">
+              {socials.map(({ key, label, href }) => {
+                const Icon = socialIcons[key]
+                return (
+                  <li key={key}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${label} (opens in a new tab)`}
+                      className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-sunken hover:text-ink"
+                    >
+                      <Icon size={19} aria-hidden="true" />
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        </Container>
       </div>
     </footer>
   )

@@ -20,11 +20,44 @@
     <meta name="twitter:description" content="Sriram's personal website." />
     <meta name="twitter:image" content="https://sriram369.github.io/og-image.png" />
     <title>Sriram's Website</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#fafafa" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="preload" as="image" href="/img/sriram.webp" fetchpriority="high" />
+    <script>
+      // Apply the saved or system theme before first paint so the page never flashes.
+      (function () {
+        var theme = null;
+        try { theme = localStorage.getItem('theme'); } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0b0b0d');
+      })();
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Sriram Naidu Thota",
+        "url": "https://sriram369.github.io/",
+        "image": "https://sriram369.github.io/img/sriram.webp",
+        "jobTitle": "Software Engineer",
+        "worksFor": { "@type": "Organization", "name": "Nouveau Elevator Industries" },
+        "alumniOf": [
+          { "@type": "CollegeOrUniversity", "name": "Johns Hopkins University" },
+          { "@type": "CollegeOrUniversity", "name": "VIT Vellore" }
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/in/sriramthota/",
+          "https://github.com/sriram369",
+          "https://x.com/chillybrosriram"
+        ]
+      }
+    </script>
   </head>
   <body>
+    <noscript>This site needs JavaScript. You can still download my resume at /Sriram_Resume.pdf.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

@@ -1,179 +1,200 @@
 @import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/wght.css";
+@import "@fontsource-variable/geist/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: #FAFAF8;
-  color: #111218;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin: 0;
-  overflow-x: hidden;
-}
-
-.font-display {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-}
-
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: #FAFAF8;
-}
-::-webkit-scrollbar-thumb {
-  background: #1E2342;
-  border-radius: 2px;
+/*
+  Design tokens.
+  One theme per page: light or dark, chosen by the visitor (system by default).
+  One accent: marigold, taken from the graduation hood in the portrait.
+  The accent is a fill or a highlight. On light surfaces it never carries thin text.
+  Shape rule: interactive controls are full pills, media and panels are 20px, chips are pills.
+  Layers: nav 40, command palette (native dialog top layer), skip link 50.
+*/
+:root {
+  color-scheme: light;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --sunken: #f1f1f2;
+  --ink: #0e0e11;
+  --muted: #55555f;
+  --faint: #696973;
+  --line: #e3e3e7;
+  --accent: #ffc21a;
+  --on-accent: #0e0e11;
+  --shadow: 0 1px 2px rgb(14 14 17 / 0.04), 0 12px 32px -12px rgb(14 14 17 / 0.14);
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-14px); }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0b0d;
+  --surface: #141417;
+  --sunken: #1a1a1e;
+  --ink: #f4f4f5;
+  --muted: #a6a6b0;
+  --faint: #8d8d97;
+  --line: #27272c;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.7);
 }
 
-@keyframes floatReverse {
-  0%, 100% { transform: translateY(0px) rotate(12deg); }
-  50% { transform: translateY(-10px) rotate(12deg); }
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
+  --radius-panel: 20px;
+  --shadow-panel: var(--shadow);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+
+  dialog {
+    color: inherit;
+  }
 }
 
-.animate-float {
-  animation: float 7s ease-in-out infinite;
+@layer components {
+  /* Marker highlight over a phrase. Text flips to the on-accent ink, so contrast holds in both themes. */
+  .mark {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 0 0.14em 0.04em;
+    margin-inline: -0.04em;
+    border-radius: 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .link {
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  .link:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding-inline: 1.25rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-out-expo), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 1.625rem;
+    padding-inline: 0.625rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    color: var(--faint);
+  }
 }
 
-.animate-float-reverse {
-  animation: floatReverse 9s ease-in-out 1.5s infinite;
+.palette::backdrop {
+  background: rgb(8 8 10 / 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.animate-float-slow {
-  animation: float 10s ease-in-out 3s infinite;
-}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 
-.animate-pulse-slow {
-  animation: pulse-slow 5s ease-in-out infinite;
-}
-
-.project-card {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
-}
-
-.project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.10);
-}
-
-.nav-link {
-  position: relative;
-  text-decoration: none;
-  color: #4B5563;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: color 0.2s ease;
-}
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1.5px;
-  background: #0891B2;
-  transition: width 0.2s ease;
-}
-
-.nav-link:hover {
-  color: #0891B2;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-
-.tag-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  background: rgba(8, 145, 178, 0.08);
-  color: #0891B2;
-  border: 1px solid rgba(8, 145, 178, 0.15);
-}
-
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #0891B2;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #111218 30%, #0891B2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-@keyframes shimmer-line {
-  0% { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-
-.timeline-line {
-  animation: shimmer-line 1s ease-out forwards;
-  transform-origin: top;
-}
-
-input, textarea {
-  outline: none;
-}
-
-input:focus, textarea:focus {
-  border-color: #0891B2 !important;
-  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
-}
-
-.projects-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #0891B2 rgba(8, 145, 178, 0.08);
-}
-
-.projects-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-
-.projects-scroll::-webkit-scrollbar-track {
-  background: rgba(8, 145, 178, 0.08);
-  border-radius: 100px;
-}
-
-.projects-scroll::-webkit-scrollbar-thumb {
-  background: #0891B2;
-  border-radius: 100px;
-}
-
-.projects-scroll::-webkit-scrollbar-thumb:hover {
-  background: #0771A2;
-}
-
-/* ── Mobile responsive ── */
-@media (max-width: 960px) {
-  .nav-links-desktop { display: none !important; }
-  .nav-hamburger { display: flex !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

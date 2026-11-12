@@ -1,116 +1,111 @@
-import { useState, useEffect } from 'react'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-// import About from './components/About' // hidden for now — kept for later use
-import Experience from './components/Experience'
-import Education from './components/Education'
-import Projects from './components/Projects'
-import Coursework from './components/Coursework'
-import Certifications from './components/Certifications'
-import Contact from './components/Contact'
-// import SriChat from './components/SriChat' // hidden for now — kept for later use
-// import Footer from './components/Footer' // hidden for now — kept for later use
+import { useEffect, useRef, useState } from 'react'
+import { MotionConfig, motion } from 'motion/react'
+import Nav from './components/Nav'
+import Footer from './components/Footer'
+import CommandPalette from './components/CommandPalette'
+import Home from './pages/Home'
+import Work from './pages/Work'
+import Projects from './pages/Projects'
+import Education from './pages/Education'
+import Coursework from './pages/Coursework'
+import Certifications from './pages/Certifications'
+import Contact from './pages/Contact'
+// SriChat (the "ask Sri" assistant), About, and Achievements are kept in
+// ./components for later use and are intentionally not mounted.
+import { pageMeta } from './data/site'
+import { useHashRoute } from './lib/router'
+import { useTheme } from './lib/theme'
 
 const pages = {
-  home: null, // handled separately — renders Hero + About
-  experience: Experience,
-  education: Education,
+  home: Home,
+  experience: Work,
   projects: Projects,
+  education: Education,
   coursework: Coursework,
   certifications: Certifications,
   contact: Contact,
 }
 
-const pageMeta = {
-  home: {
-    title: "Sriram's Website",
-    description: "Sriram's personal website.",
-  },
-  experience: {
-    title: 'Experience | Sriram Naidu Thota',
-    description: 'Work experience across open source, Johns Hopkins leadership, AI engineering, and AI product discovery.',
-  },
-  education: {
-    title: 'Education | Sriram Naidu Thota',
-    description: 'Academic journey across Johns Hopkins University, VIT Vellore, and the National University of Singapore.',
-  },
-  projects: {
-    title: 'Projects | Sriram Naidu Thota',
-    description: 'Selected AI, data science, RAG, computer vision, and multi-agent projects by Sriram Naidu Thota.',
-  },
-  coursework: {
-    title: 'Coursework | Sriram Naidu Thota',
-    description: 'Academic coursework across AI, business analytics, data systems, cloud computing, and responsible AI.',
-  },
-  certifications: {
-    title: 'Certifications | Sriram Naidu Thota',
-    description: 'Certifications and verified learning records across data science, Python, UX, ecology, and product discovery.',
-  },
-  contact: {
-    title: 'Contact | Sriram Naidu Thota',
-    description: 'Contact Sriram Naidu Thota for AI systems, product strategy, collaboration, and full-time opportunities.',
-  },
-}
-
-const pageKeys = Object.keys(pages)
-
-function getPageFromHash() {
-  const hash = window.location.hash.replace('#', '').toLowerCase().split('/')[0]
-  return pageKeys.includes(hash) ? hash : 'home'
-}
+const isTyping = (target) =>
+  target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
 
 export default function App() {
-  const [activePage, setActivePage] = useState(getPageFromHash)
+  const [page, navigate] = useHashRoute()
+  const [theme, toggleTheme] = useTheme()
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const firstRender = useRef(true)
 
   useEffect(() => {
-    const onHashChange = () => setActivePage(getPageFromHash())
-    window.addEventListener('hashchange', onHashChange)
-    window.addEventListener('popstate', onHashChange)
-    return () => {
-      window.removeEventListener('hashchange', onHashChange)
-      window.removeEventListener('popstate', onHashChange)
-    }
-  }, [])
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [activePage])
-
-  useEffect(() => {
-    const meta = pageMeta[activePage] ?? pageMeta.home
+    const meta = pageMeta[page]
     document.title = meta.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
-  }, [activePage])
 
-  const navigate = (page) => {
-    const nextPage = pageKeys.includes(page) ? page : 'home'
-    const nextHash = nextPage === 'home' ? '' : `#${nextPage}`
+    // A hash like "#projects/finrag" targets one card; that page handles its own scroll.
+    const deepLink = window.location.hash.includes('/')
+    if (!deepLink) window.scrollTo({ top: 0, behavior: 'instant' })
 
-    if (window.location.hash === nextHash) {
-      setActivePage(nextPage)
-      return
-    }
-
-    if (nextHash) {
-      window.location.hash = nextHash
+    // After a client-side navigation, move focus to the new page heading so
+    // keyboard and screen reader users land on the new content.
+    if (firstRender.current) {
+      firstRender.current = false
     } else {
-      window.history.pushState('', document.title, window.location.pathname + window.location.search)
-      setActivePage('home')
+      requestAnimationFrame(() => document.getElementById('page-title')?.focus({ preventScroll: true }))
     }
-  }
+  }, [page])
 
-  const PageComponent = pages[activePage]
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      const commandK = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k'
+      const slash = event.key === '/' && !isTyping(event.target)
+      if (commandK || slash) {
+        event.preventDefault()
+        setPaletteOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const Page = pages[page]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FAFAF8' }}>
-      <Navbar activePage={activePage} navigate={navigate} />
-      <main>
-        {activePage === 'home' ? (
-          <Hero />
-        ) : (
-          PageComponent && <PageComponent />
-        )}
+    <MotionConfig reducedMotion="user">
+      <a
+        href="#main"
+        onClick={(event) => {
+          event.preventDefault()
+          document.getElementById('main')?.focus()
+        }}
+        className="btn btn-primary fixed top-3 left-3 z-50 -translate-y-20 focus-visible:translate-y-0"
+      >
+        Skip to content
+      </a>
+
+      <Nav
+        page={page}
+        navigate={navigate}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        onOpenPalette={() => setPaletteOpen(true)}
+      />
+
+      <main id="main" tabIndex={-1} className="min-h-[100dvh] outline-none">
+        {/* Keyed by page so each page fades in fresh and its own entry motion replays. */}
+        <motion.div key={page} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
+          <Page />
+        </motion.div>
       </main>
-    </div>
+
+      <Footer page={page} />
+
+      {paletteOpen && (
+        <CommandPalette
+          onClose={() => setPaletteOpen(false)}
+          navigate={navigate}
+          theme={theme}
+          toggleTheme={toggleTheme}
+        />
+      )}
+    </MotionConfig>
   )
 }

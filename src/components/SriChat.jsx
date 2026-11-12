@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 
 // The proxy lives on Vercel (GH Pages can't hold a secret key server-side).
 // Set VITE_CHAT_API_URL in .env before building if this changes.

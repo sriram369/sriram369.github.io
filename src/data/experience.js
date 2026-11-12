@@ -1,0 +1,122 @@
+// Each bullet is a list of segments so a sentence can carry inline links.
+export const experiences = [
+  {
+    id: 'nouveau',
+    role: 'Software Engineer, Full-Stack & Applied AI',
+    company: 'Nouveau Elevator Industries',
+    companyLinks: [{ text: 'Nouveau Elevator Industries', href: 'https://www.nouveauelevator.com/' }],
+    logo: '/nouveau-favicon.jpg',
+    period: 'Aug 2026 - Present',
+    location: 'Long Island City, NY',
+    bullets: [
+      [{ text: 'Partnered with finance stakeholders to define billing requirements and shipped a production system for approvals, invoicing, and payment tracking using React, Node.js, and PostgreSQL.' }],
+      [{ text: 'Built and deployed an AI assistant for form entry and human-approved worker assignments, cutting workflow time from ~5 minutes to ~30 seconds (~90%); incorporated source citations and role-based data access.' }],
+      [{ text: 'Identified support-workflow gaps and built request intake, routing by service-level targets, on-call escalation, notifications, and manager reporting to track unresolved customer requests.' }],
+    ],
+    tags: ['React', 'Node.js', 'Prisma', 'PostgreSQL', 'Vertex AI', 'Billing'],
+  },
+  {
+    id: 'jhu-consulting',
+    role: 'AI Product Consultant, Johns Hopkins IT Consulting Lab',
+    company: 'PracticeLink & Ridgeline Agency',
+    companyLinks: [
+      { text: 'PracticeLink', href: 'https://practicelink-ai-artificial-iq.vercel.app/' },
+      { text: 'Ridgeline Agency', href: 'https://ridgelinescoresriram.vercel.app/' },
+    ],
+    logo: '/practicelink-favicon.svg',
+    logoCrop: true,
+    period: 'Jan 2026 - May 2026',
+    location: 'Washington, DC / Remote',
+    bullets: [
+      [{ text: "A pro-bono consulting case through JHU's IT Consulting Lab course. Two companies wanted to get more AI-adaptive, and we guided them on the right AI tools, agents, and adoption roadmap for their teams." }],
+    ],
+    projectLinks: [
+      {
+        name: 'PracticeLink',
+        demoHref: 'https://practicelink-ai-artificial-iq.vercel.app/',
+        repoHref: 'https://github.com/sriram369/practicelink-ai-adoption-hub',
+      },
+      {
+        name: 'Ridgeline Agency',
+        demoHref: 'https://ridgelinescoresriram.vercel.app/',
+        repoHref: 'https://github.com/sriram369/ridgeline-ai-cx-strategy-hub',
+      },
+    ],
+    tags: ['Next.js', 'TypeScript', 'AI Product', 'Requirements Gathering', 'Testing', 'Technical Documentation'],
+  },
+  {
+    id: 'openclaw',
+    role: 'Open-Source Contributor',
+    company: 'OpenClaw',
+    companyLinks: [{ text: 'OpenClaw', href: 'https://github.com/OpenClaw/OpenClaw' }],
+    companyNote: '232k+ stars',
+    logo: 'https://github.com/openclaw.png',
+    period: 'Feb 2026',
+    location: 'Remote',
+    bullets: [
+      [
+        { text: 'Implemented production-grade base64 image validation in ' },
+        { text: 'src/agents/tool-images.ts', href: 'https://github.com/OpenClaw/OpenClaw/blob/main/src/agents/tool-images.ts', code: true },
+        { text: ' to prevent Anthropic API-induced session corruption in live agent workflows (' },
+        { text: 'PR #18263', href: 'https://github.com/OpenClaw/OpenClaw/pull/18263' },
+        { text: ', merged to main).' },
+      ],
+      [{ text: 'Added validateAndNormalizeBase64() with regex, padding checks, and URL-safe normalization; replaced invalid images with graceful text fallbacks.' }],
+      [{ text: 'Wrote and maintained 5 new end-to-end tests covering edge cases across the full validation pipeline.' }],
+    ],
+    tags: ['TypeScript', 'Anthropic API', 'Open Source', 'Testing'],
+  },
+  {
+    id: 'jhu-social',
+    role: 'Social Media Head',
+    company: 'Johns Hopkins University, DC Campus',
+    companyLinks: [{ text: 'Johns Hopkins University, DC Campus', href: 'https://carey.jhu.edu/' }],
+    logo: '/jhu-favicon.png',
+    period: 'Sep 2025 - Jul 2026',
+    location: 'Washington, DC',
+    bullets: [
+      [{ text: 'Sole social media lead for strategy and content creation across the JHU Carey DC Campus.' }],
+      [
+        { text: 'Grew the ' },
+        { text: 'Instagram', href: 'https://www.instagram.com/jhucarey/' },
+        { text: ' following by ~20%, from 10K to 12K+ followers.' },
+      ],
+      [
+        { text: 'Managed a 50K-member ' },
+        { text: 'LinkedIn', href: 'https://www.linkedin.com/school/jhucarey/' },
+        { text: ' community of students, alumni, and industry professionals.' },
+      ],
+      [{ text: "Coordinated with faculty and administrators to amplify the school's voice and drive engagement." }],
+    ],
+    tags: ['Social Media Strategy', 'Content Creation', 'Brand Management', 'LinkedIn', 'Instagram', 'Community Growth'],
+  },
+  {
+    id: 'krutrim',
+    role: 'AI Prompt Engineering Intern',
+    company: 'Krutrim SI / Ola Electric',
+    logo: '/ola-favicon.png',
+    period: 'Aug 2023 - Nov 2023',
+    location: 'Bengaluru, India',
+    bullets: [
+      [{ text: 'Engineered and evaluated multilingual LLM workflows across four Indian languages using prompt templates, structured outputs, instruction-response datasets, and adversarial safety cases to improve quality and reliability.' }],
+      [
+        { text: 'You can check out some of that work at ' },
+        { text: 'kruti.ai', href: 'https://kruti.ai' },
+        { text: '.' },
+      ],
+    ],
+    tags: ['Prompt Engineering', 'Multilingual AI', 'LLM Evaluation', 'Python', 'NLP'],
+  },
+  {
+    id: 'extern',
+    role: 'AI Product Discovery Intern',
+    company: 'Paragon One (now Extern)',
+    logo: '/extern-favicon.png',
+    period: 'Dec 2023',
+    location: 'Remote',
+    bullets: [
+      [{ text: 'Drove product strategy by analyzing qualitative customer feedback and user behavior data to identify key pain points and strategic pivots. Translated insights into actionable engineering requirements and authored clear technical documentation for stakeholders, directly influencing the product roadmap.' }],
+    ],
+    tags: ['Product Strategy', 'User Research', 'Technical Documentation', 'AI Product', 'Roadmapping'],
+  },
+]
