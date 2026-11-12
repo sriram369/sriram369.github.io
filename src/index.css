@@ -1,179 +1,665 @@
 @import "tailwindcss";
+@import "@fontsource-variable/bricolage-grotesque/wght.css";
+@import "@fontsource-variable/geist/wght.css";
+@import "@fontsource-variable/geist-mono/wght.css";
 
-* {
-  box-sizing: border-box;
+/*
+  Design tokens.
+
+  Theme: light or dark, chosen by the visitor (system by default).
+  Accent: one, marigold, taken from the graduation hood in the portrait. It is a
+  fill or a highlight and never carries thin text on a light surface.
+  Shape: controls are full pills, panels and media are 20px, chips are pills.
+  Layers: nav 40, skip link 50, dialogs use the browser top layer.
+
+  Elevation is tactile and crisp: a raised thing is its fill plus a fine ring
+  and a tight 1px drop, never a wide soft blur. Light raises with white on the
+  page ground. Dark raises by being a step lighter, with a 0.5px outline and a
+  black drop. Every surface class below re-declares these tokens so a control
+  takes its fill, edge, and drop from whatever it sits on.
+*/
+:root {
+  color-scheme: light;
+  --bg: #f6f6f7;
+  --surface: #ffffff;
+  --sunken: #ececee;
+  --ink: #0e0e11;
+  --muted: #55555f;
+  --faint: #696973;
+  --line: #e0e0e4;
+  --accent: #ffc21a;
+  --on-accent: #0e0e11;
+  --focus: #0e0e11;
+
+  /* Controls: fill, hover fill, selected fill. */
+  --control: #ffffff;
+  --control-hover: #f4f4f5;
+  --primary-hover: #2a2a2f;
+
+  --shadow-ink: 14 14 17;
+  --shadow-control: 0 0 0 1px rgb(var(--shadow-ink) / 0.08), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.12);
+  --shadow-primary: 0 0 0 1px var(--surface), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.3);
+  --shadow-card: 0 0 0 1px rgb(var(--shadow-ink) / 0.07), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.12),
+    0 3px 4px -2px rgb(var(--shadow-ink) / 0.08);
+  --shadow-card-hover: 0 0 0 1px rgb(var(--shadow-ink) / 0.2), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.12),
+    0 3px 4px -2px rgb(var(--shadow-ink) / 0.08);
+  --shadow-menu: 0 0 0 1px rgb(var(--shadow-ink) / 0.08), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.12),
+    0 4px 8px -4px rgb(var(--shadow-ink) / 0.16);
+  --shadow-modal: 0 0 0 1px rgb(var(--shadow-ink) / 0.07), 0 1px 2px 0 rgb(var(--shadow-ink) / 0.14),
+    0 6px 8px -4px rgb(var(--shadow-ink) / 0.2);
+  --backdrop: rgb(0 0 0 / 0.3);
 }
 
-html {
-  scroll-behavior: smooth;
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0b0d;
+  --surface: #141417;
+  --sunken: #1c1c20;
+  --ink: #f4f4f5;
+  --muted: #a6a6b0;
+  --faint: #8d8d97;
+  --line: #27272c;
+  --focus: #f4f4f5;
+
+  --control: #212126;
+  --control-hover: #2a2a30;
+  --primary-hover: #dcdce0;
+
+  --shadow-control: 0 0 0 0.5px #3d3d45, 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-primary: 0 0 0 0.5px var(--ink), 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-card: 0 0 0 0.5px #2e2e35, 0 1px 2px 0 rgb(0 0 0 / 0.5), 0 3px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-card-hover: 0 0 0 0.5px #55555f, 0 1px 2px 0 rgb(0 0 0 / 0.5), 0 3px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-menu: 0 0 0 0.5px #3d3d45, 0 1px 2px 0 rgb(0 0 0 / 0.5), 0 4px 8px -4px rgb(0 0 0 / 0.5);
+  --shadow-modal: 0 0 0 0.5px #3d3d45, 0 1px 2px 0 rgb(0 0 0 / 0.5), 0 6px 8px -4px rgb(0 0 0 / 0.5);
+  --backdrop: rgb(0 0 0 / 0.8);
 }
 
-body {
-  background-color: #FAFAF8;
-  color: #111218;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", monospace;
+  --radius-panel: 20px;
+  --shadow-card: var(--shadow-card);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* For anything the visitor caused: presses, hovers, menus. */
+  --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
+  }
+
+  dialog {
+    color: inherit;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  /* Marker highlight over a phrase. Text flips to the on-accent ink, so contrast holds in both themes. */
+  .mark {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding: 0 0.14em 0.04em;
+    margin-inline: -0.04em;
+    border-radius: 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .link {
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.15s var(--ease-snap);
+  }
+
+  .link:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  /*
+    Buttons. One recipe, three roles:
+    primary (ink fill, the next step), secondary (.btn-ghost: raised white),
+    and utility (.icon-btn, .chip-button). All squeeze when pressed. Hover
+    changes colour only, and only for a mouse, so nothing sticks on touch.
+  */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 2.75rem;
+    padding-inline: 1.25rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s var(--ease-snap), background-color 0.15s var(--ease-snap), box-shadow 0.15s var(--ease-snap);
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: var(--shadow-primary);
+  }
+
+  .btn-ghost {
+    background: var(--control);
+    color: var(--ink);
+    box-shadow: var(--shadow-control);
+  }
+
+  /* Smaller on a desk, full 44px for a finger. */
+  .btn-sm {
+    height: 2.25rem;
+    padding-inline: 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-square {
+    width: 2.75rem;
+    padding-inline: 0;
+    flex-shrink: 0;
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+    transform: none;
+  }
+
+  .icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: transform 0.15s var(--ease-snap), background-color 0.15s var(--ease-snap), color 0.15s var(--ease-snap);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.94);
+  }
+
+  /* A raised surface: project cards, case study notes, certificates. */
+  .card {
+    border-radius: var(--radius-panel);
+    background: var(--surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* A card that is itself a link squeezes a touch and darkens its ring on hover. */
+  a.card {
+    transition: transform 0.15s var(--ease-snap), box-shadow 0.15s var(--ease-snap);
+  }
+
+  a.card:active {
+    transform: scale(0.99);
+  }
+
+  /* Neutral badge: raised from its ground by the ring and drop, never by a grey fill. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    height: 1.5rem;
+    padding-inline: 0.5625rem;
+    border-radius: 999px;
+    background: var(--control);
+    box-shadow: var(--shadow-control);
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* Utility pill: a chip you can press. */
+  .chip-button {
+    height: 1.75rem;
+    padding-inline: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.15s var(--ease-snap), background-color 0.15s var(--ease-snap), color 0.15s var(--ease-snap);
+  }
+
+  .chip-button:active {
+    transform: scale(0.97);
+  }
+
+  /* Fields are wells: sunk into the page, no border. */
+  .field {
+    height: 2.75rem;
+    padding-inline: 1.125rem;
+    border-radius: 999px;
+    background: var(--sunken);
+    color: var(--ink);
+    font-size: 1rem;
+    transition: background-color 0.15s var(--ease-snap), box-shadow 0.15s var(--ease-snap);
+  }
+
+  .field::placeholder {
+    color: var(--faint);
+  }
+
+  .field:focus-visible {
+    outline: none;
+    background: color-mix(in srgb, var(--sunken) 94%, var(--ink));
+    box-shadow: 0 0 0 2px var(--focus);
+  }
+
+  /* Segmented toggle: a sunk track with one raised option that slides. */
+  .segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--sunken);
+  }
+
+  .segmented-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 2rem;
+    padding-inline: 0.875rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--muted);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s var(--ease-snap), transform 0.15s var(--ease-snap);
+  }
+
+  .segmented-option[aria-pressed="true"] {
+    color: var(--ink);
+  }
+
+  .segmented-option:active {
+    transform: scale(0.97);
+  }
+
+  .segmented-thumb {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: var(--control);
+    box-shadow: var(--shadow-control);
+  }
+
+  /* Things that float over the page: search and the Ask Sri panel. */
+  .overlay {
+    background: var(--surface);
+    box-shadow: var(--shadow-modal);
+  }
+
+  /* A row in a menu. Each row fades its own highlight; nothing slides between rows. */
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s var(--ease-snap);
+  }
+
+  .menu-item[aria-selected="true"] {
+    background: var(--sunken);
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    color: var(--faint);
+  }
+
+  .kbd {
+    display: inline-flex;
+    align-items: center;
+    height: 1.125rem;
+    padding-inline: 0.3125rem;
+    border-radius: 5px;
+    background: var(--sunken);
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--muted);
+  }
+}
+
+/* Hover is colour only, and only where there is a real pointer to hover with. */
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:not(:disabled):hover { background: var(--primary-hover); }
+  .btn-ghost:not(:disabled):hover { background: var(--control-hover); }
+  .icon-btn:hover { background: var(--sunken); color: var(--ink); }
+  .chip-button:hover { background: var(--control-hover); color: var(--ink); }
+  .segmented-option:hover { color: var(--ink); }
+  a.card:hover { box-shadow: var(--shadow-card-hover); }
+  .menu-item:hover { background: var(--sunken); }
+}
+
+/* Fingers get full-size targets. */
+@media (pointer: coarse) {
+  .btn-sm { height: 2.75rem; padding-inline: 1.125rem; font-size: 0.9375rem; }
+  .icon-btn { width: 2.75rem; height: 2.75rem; }
+  .chip-button { height: 2.25rem; padding-inline: 0.875rem; font-size: 0.875rem; }
+  .segmented-option { height: 2.25rem; font-size: 0.9375rem; }
+  .menu-item { min-height: 3rem; }
+}
+
+/*
+  Tones re-point the tokens for one panel, so every utility and control inside
+  (text-muted, .btn, .chip) takes its fill, edge, and drop from that panel.
+*/
+.tone-accent {
+  --surface: #ffc21a;
+  --bg: #ffc21a;
+  --sunken: #f0b20a;
+  --ink: #0e0e11;
+  --muted: #3f3413;
+  --faint: #5a4a1a;
+  --line: rgb(14 14 17 / 0.22);
+  --accent: #0e0e11;
+  --on-accent: #ffc21a;
+  --focus: #0e0e11;
+  --control: #ffffff;
+  --control-hover: #fff6da;
+  --primary-hover: #2a2a2f;
+  --shadow-control: 0 0 0 1px rgb(14 14 17 / 0.1), 0 1px 2px 0 rgb(14 14 17 / 0.2);
+  --shadow-primary: 0 1px 2px 0 rgb(14 14 17 / 0.3);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.tone-invert {
+  --surface: #0e0e11;
+  --bg: #0e0e11;
+  --sunken: #1c1c21;
+  --ink: #f4f4f5;
+  --muted: #a6a6b0;
+  --faint: #8d8d97;
+  --line: #2c2c33;
+  --focus: #f4f4f5;
+  --control: #212126;
+  --control-hover: #2a2a30;
+  --primary-hover: #dcdce0;
+  --shadow-control: 0 0 0 0.5px #3d3d45, 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-primary: 0 0 0 0.5px var(--ink), 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .tone-invert {
+  --surface: #f4f4f5;
+  --bg: #f4f4f5;
+  --sunken: #e6e6ea;
+  --ink: #0e0e11;
+  --muted: #55555f;
+  --faint: #696973;
+  --line: #d6d6dc;
+  --focus: #0e0e11;
+  --control: #ffffff;
+  --control-hover: #f4f4f5;
+  --primary-hover: #2a2a2f;
+  --shadow-control: 0 0 0 1px rgb(14 14 17 / 0.08), 0 1px 2px 0 rgb(14 14 17 / 0.12);
+  --shadow-primary: 0 1px 2px 0 rgb(14 14 17 / 0.3);
+}
+
+/* ---- Overlays ---- */
+
+.palette::backdrop,
+.ask-panel::backdrop {
+  background: var(--backdrop);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Search opens like a menu: a short scale and fade, in from just above. */
+.palette[open] {
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: 50% 0;
+  transition: opacity 0.15s var(--ease-snap), transform 0.15s var(--ease-snap);
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* Ask Sri: a side panel on wide screens, a bottom sheet on phones. */
+.ask-panel {
+  position: fixed;
+  inset: 12px 12px 12px auto;
+  width: min(440px, calc(100vw - 24px));
+  height: auto;
+  max-height: none;
   margin: 0;
-  overflow-x: hidden;
+  border-radius: var(--radius-panel);
 }
 
-.font-display {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+.ask-panel[open] {
+  display: flex;
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.24s var(--ease-snap), transform 0.24s var(--ease-snap);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateX(16px);
+  }
 }
 
-::-webkit-scrollbar {
-  width: 4px;
-}
-::-webkit-scrollbar-track {
-  background: #FAFAF8;
-}
-::-webkit-scrollbar-thumb {
-  background: #1E2342;
-  border-radius: 2px;
+.sheet-handle {
+  display: none;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-14px); }
+@media (max-width: 767px) {
+  .ask-panel {
+    inset: auto 0 0 0;
+    width: 100%;
+    max-width: none;
+    height: min(86dvh, 680px);
+    border-radius: 14px 14px 0 0;
+  }
+
+  /* The sheet rises solid the whole way: no fade. */
+  .ask-panel[open] {
+    transition: transform 0.32s var(--ease-snap);
+
+    @starting-style {
+      opacity: 1;
+      transform: translateY(100%);
+    }
+  }
+
+  /* While a finger is dragging it, the sheet follows without easing. */
+  .ask-panel[data-dragging] {
+    transition: none;
+  }
+
+  /* On a phone the grab handle replaces the close button. */
+  .sheet-handle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 28px;
+    flex-shrink: 0;
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .sheet-handle::before {
+    content: "";
+    width: 36px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--control);
+    box-shadow: var(--shadow-control);
+  }
+
+  .sheet-close {
+    display: none;
+  }
 }
 
-@keyframes floatReverse {
-  0%, 100% { transform: translateY(0px) rotate(12deg); }
-  50% { transform: translateY(-10px) rotate(12deg); }
+.bubble {
+  max-width: 88%;
+  padding: 0.625rem 0.875rem;
+  border-radius: 18px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+.bubble-them {
+  align-self: flex-start;
+  background: var(--sunken);
+  border-bottom-left-radius: 6px;
 }
 
-.animate-float {
-  animation: float 7s ease-in-out infinite;
+.bubble-me {
+  align-self: flex-end;
+  background: var(--ink);
+  color: var(--bg);
+  border-bottom-right-radius: 6px;
 }
 
-.animate-float-reverse {
-  animation: floatReverse 9s ease-in-out 1.5s infinite;
+.typing {
+  display: inline-flex;
+  gap: 4px;
+  padding-block: 0.4rem;
 }
 
-.animate-float-slow {
-  animation: float 10s ease-in-out 3s infinite;
+.typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: typing 1.1s ease-in-out infinite;
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 5s ease-in-out infinite;
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typing {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
 }
 
-.project-card {
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+/* ---- Home page ---- */
+
+/* Dot grid that is only lit near the cursor. --spot-x / --spot-y are driven by motion values. */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--faint) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(circle 340px at var(--spot-x, 70%) var(--spot-y, 30%), #000 0%, transparent 100%);
+  mask-image: radial-gradient(circle 340px at var(--spot-x, 70%) var(--spot-y, 30%), #000 0%, transparent 100%);
+  opacity: 0.55;
 }
 
-.project-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.10);
+/* Project deck: cards pin under the nav and stack. Only on screens tall and wide enough to hold a card. */
+@media (min-width: 1024px) and (min-height: 700px) {
+  .stack-card {
+    position: sticky;
+    top: calc(88px + var(--stack-index) * 22px);
+  }
 }
 
-.nav-link {
-  position: relative;
-  text-decoration: none;
-  color: #4B5563;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: color 0.2s ease;
+@media not ((min-width: 1024px) and (min-height: 700px)) {
+  .stack-card > * {
+    transform: none !important;
+  }
 }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1.5px;
-  background: #0891B2;
-  transition: width 0.2s ease;
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-.nav-link:hover {
-  color: #0891B2;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-
-.tag-chip {
+/* The round arrow at the end of a linked row or card: a small raised control that belongs to its row. */
+.arrow-dot {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  background: rgba(8, 145, 178, 0.08);
-  color: #0891B2;
-  border: 1px solid rgba(8, 145, 178, 0.15);
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--control);
+  box-shadow: var(--shadow-control);
+  transition: background-color 0.15s var(--ease-snap);
 }
 
-.section-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #0891B2;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #111218 30%, #0891B2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-@keyframes shimmer-line {
-  0% { transform: scaleX(0); }
-  100% { transform: scaleX(1); }
-}
-
-.timeline-line {
-  animation: shimmer-line 1s ease-out forwards;
-  transform-origin: top;
-}
-
-input, textarea {
-  outline: none;
-}
-
-input:focus, textarea:focus {
-  border-color: #0891B2 !important;
-  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.08);
-}
-
-.projects-scroll {
-  scrollbar-width: thin;
-  scrollbar-color: #0891B2 rgba(8, 145, 178, 0.08);
-}
-
-.projects-scroll::-webkit-scrollbar {
-  height: 6px;
-}
-
-.projects-scroll::-webkit-scrollbar-track {
-  background: rgba(8, 145, 178, 0.08);
-  border-radius: 100px;
-}
-
-.projects-scroll::-webkit-scrollbar-thumb {
-  background: #0891B2;
-  border-radius: 100px;
-}
-
-.projects-scroll::-webkit-scrollbar-thumb:hover {
-  background: #0771A2;
-}
-
-/* ── Mobile responsive ── */
-@media (max-width: 960px) {
-  .nav-links-desktop { display: none !important; }
-  .nav-hamburger { display: flex !important; }
+@media (hover: hover) and (pointer: fine) {
+  .group:hover > .arrow-dot,
+  .group:hover .arrow-dot { background: var(--control-hover); }
 }
