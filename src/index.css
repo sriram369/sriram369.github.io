@@ -198,3 +198,68 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---- Home page ---- */
+
+/* Dot grid that is only lit near the cursor. --spot-x / --spot-y are driven by motion values. */
+.dot-grid {
+  background-image: radial-gradient(circle, var(--faint) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(circle 340px at var(--spot-x, 70%) var(--spot-y, 30%), #000 0%, transparent 100%);
+  mask-image: radial-gradient(circle 340px at var(--spot-x, 70%) var(--spot-y, 30%), #000 0%, transparent 100%);
+  opacity: 0.55;
+}
+
+/*
+  Tones re-point the design tokens for one panel, so every utility inside
+  (text-muted, border-line, .btn, .chip) adapts without per-element overrides.
+*/
+.tone-accent {
+  --surface: #ffc21a;
+  --bg: #ffc21a;
+  --sunken: #f0b20a;
+  --ink: #0e0e11;
+  --muted: #3f3413;
+  --faint: #5a4a1a;
+  --line: rgb(14 14 17 / 0.22);
+  --accent: #0e0e11;
+  --on-accent: #ffc21a;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.tone-invert {
+  --surface: #0e0e11;
+  --bg: #0e0e11;
+  --sunken: #1c1c21;
+  --ink: #f4f4f5;
+  --muted: #a6a6b0;
+  --faint: #8d8d97;
+  --line: #2c2c33;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .tone-invert {
+  --surface: #f4f4f5;
+  --bg: #f4f4f5;
+  --sunken: #e6e6ea;
+  --ink: #0e0e11;
+  --muted: #55555f;
+  --faint: #696973;
+  --line: #d6d6dc;
+}
+
+/* Project deck: cards pin under the nav and stack. Only on screens tall and wide enough to hold a card. */
+@media (min-width: 1024px) and (min-height: 700px) {
+  .stack-card {
+    position: sticky;
+    top: calc(88px + var(--stack-index) * 22px);
+  }
+}
+
+@media not ((min-width: 1024px) and (min-height: 700px)) {
+  .stack-card > * {
+    transform: none !important;
+  }
+}
