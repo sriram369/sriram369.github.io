@@ -1,5 +1,6 @@
 import { ArrowRight, DownloadSimple } from '@phosphor-icons/react'
 import { schools } from '../data/education'
+import { hrefFor } from '../lib/routes'
 import { Container, OrgLogo, PageHeader, Reveal, TextLink } from '../components/ui'
 
 function SchoolLinks({ links }) {
@@ -98,14 +99,14 @@ export default function Education() {
           {more.map(({ key, label, detail }) => (
             <a
               key={key}
-              href={`#${key}`}
+              href={hrefFor(key)}
               className="group flex items-center justify-between gap-6 border-b border-line py-7 transition-colors"
             >
               <span>
                 <span className="block font-display text-2xl font-semibold tracking-[-0.025em]">{label}</span>
                 <span className="mt-1 block text-[0.9375rem] text-muted">{detail}</span>
               </span>
-              <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-line transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-on-accent">
+              <span className="arrow-dot">
                 <ArrowRight size={17} weight="bold" aria-hidden="true" />
               </span>
             </a>

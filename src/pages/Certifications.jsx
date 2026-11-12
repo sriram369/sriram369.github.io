@@ -13,13 +13,13 @@ function Certificate({ cert }) {
         <span className="sr-only">View certificate (opens in a new tab)</span>
       )}
       {cert.link && (
-        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-line transition-colors duration-300 group-hover:border-accent group-hover:bg-accent group-hover:text-on-accent">
+        <span className="arrow-dot">
           <ArrowUpRight size={16} weight="bold" aria-hidden="true" />
         </span>
       )}
     </>
   )
-  const shell = 'group flex h-full items-start justify-between gap-5 rounded-panel border border-line bg-surface p-6'
+  const shell = 'card group flex h-full items-start justify-between gap-5 p-6'
 
   if (!cert.link) return <div className={shell}>{body}</div>
   return (
@@ -27,7 +27,7 @@ function Certificate({ cert }) {
       href={cert.link}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${shell} transition-colors duration-300 hover:border-ink`}
+      className={shell}
     >
       {body}
     </a>
@@ -38,7 +38,7 @@ export default function Certifications() {
   return (
     <>
       <PageHeader title="Certifications" lead="Certificates and verified learning records. Cards with an arrow open the original credential.">
-        <a href="#education" className="link mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium">
+        <a href="/education/" className="link mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium">
           <ArrowLeft size={15} weight="bold" aria-hidden="true" />
           Education
         </a>

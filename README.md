@@ -9,6 +9,14 @@ The site now has two related jobs:
 
 Private raw material, review notes, screenshots, and unfinished claims belong in the local-only `private/` folder. That folder is excluded from git and should not be pushed.
 
+## How the site is built
+
+- **Pages and URLs.** Every page has a real URL (`/work/`, `/projects/finrag/`, ...). Paths live in `src/lib/routes.js`. `npm run build` builds the client, then `scripts/prerender.mjs` renders each route to its own `index.html` with its own title, description, and link preview image, and writes `404.html` and `sitemap.xml`. Old hash links (`#experience`) are redirected by a small script in `index.html`.
+- **Content.** All text lives in `src/data/`: `site.js` (profile, nav, home page), `experience.js`, `projects.js`, `caseStudies.js`, `education.js`, `coursework.js`. Adding a project to `projects.js` gives it a card, a page, a search entry, and a sitemap entry.
+- **Design tokens.** Colors, type, radii, and shadows are CSS variables at the top of `src/index.css`, with light and dark values. Component classes (`.btn`, `.card`, `.chip`, `.field`) are defined there too.
+- **Ask Sri.** The assistant panel (`src/components/AskSri.jsx`) calls `api/chat.js`, a Vercel function that proxies to the model provider so the API key never reaches the browser. See `.env.example`.
+- **Local development.** `npm run dev` for the dev server, `npm run build && npm run preview` to check the pre-rendered output.
+
 ## Development
 
 ```bash

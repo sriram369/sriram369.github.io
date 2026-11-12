@@ -114,7 +114,7 @@ export default function Coursework() {
   return (
     <>
       <PageHeader title="Coursework" lead="Academic coursework across Johns Hopkins University, VIT Vellore, and NUS Singapore.">
-        <a href="#education" className="link mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium">
+        <a href="/education/" className="link mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-medium">
           <ArrowLeft size={15} weight="bold" aria-hidden="true" />
           Education
         </a>
@@ -148,7 +148,7 @@ export default function Coursework() {
                     layoutId="coursework-tab"
                     className="absolute inset-x-4 -bottom-px h-[3px] bg-accent first:left-0"
                     style={tab.key === tabs[0].key ? { left: 0 } : undefined}
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    transition={{ type: 'spring', bounce: 0.12, duration: 0.4 }}
                   />
                 )}
               </button>

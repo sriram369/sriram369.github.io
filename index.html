@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Sriram's personal website." />
+    <link rel="canonical" href="https://sriram369.github.io/" />
     <meta name="keywords" content="Sriram Naidu Thota, AI, Machine Learning, Johns Hopkins, Portfolio, Product Engineering" />
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -20,9 +21,22 @@
     <meta name="twitter:description" content="Sriram's personal website." />
     <meta name="twitter:image" content="https://sriram369.github.io/og-image.png" />
     <title>Sriram's Website</title>
-    <meta name="theme-color" content="#fafafa" />
+    <meta name="theme-color" content="#f6f6f7" />
     <meta name="color-scheme" content="light dark" />
     <link rel="preload" as="image" href="/img/sriram.webp" fetchpriority="high" />
+    <script>
+      // Links from before the site had real URLs used hash routes ("#experience",
+      // "#projects/finrag"). Send them to the matching page before anything renders.
+      (function () {
+        var hash = location.hash.slice(1).toLowerCase().replace(/\/+$/, '');
+        if (!hash || location.pathname !== '/') return;
+        var first = hash.split('/')[0];
+        var renamed = { home: '/', experience: '/work/' };
+        var kept = ['education', 'projects', 'coursework', 'certifications', 'contact'];
+        if (renamed[first]) location.replace(renamed[first]);
+        else if (kept.indexOf(first) > -1) location.replace('/' + hash + '/');
+      })();
+    </script>
     <script>
       // Apply the saved or system theme before first paint so the page never flashes.
       (function () {
@@ -57,7 +71,12 @@
     </script>
   </head>
   <body>
-    <noscript>This site needs JavaScript. You can still download my resume at /Sriram_Resume.pdf.</noscript>
+    <noscript>
+      <!-- Pages are pre-rendered. Without JavaScript, show content that would otherwise wait for its entry animation. -->
+      <style>
+        [style*="opacity"], [style*="transform"] { opacity: 1 !important; transform: none !important; }
+      </style>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

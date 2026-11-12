@@ -1,4 +1,5 @@
 // group drives the filter on the Projects page. origin is the label shown on the card.
+// ogImage is the JPEG used for link previews (WebP is not reliably supported there).
 export const projectGroups = [
   { key: 'all', label: 'All' },
   { key: 'personal', label: 'Personal' },
@@ -13,6 +14,7 @@ export const projects = [
     group: 'jhu',
     featured: true,
     image: '/img/project-aurapath.webp',
+    ogImage: '/og/aurapath.jpg',
     title: 'AuraPath',
     tagline: 'AI navigation for the visually impaired',
     description:
@@ -35,6 +37,7 @@ export const projects = [
     group: 'personal',
     featured: true,
     image: '/img/project-finrag.webp',
+    ogImage: '/og/finrag.jpg',
     title: 'FinRAG Analyst',
     tagline: 'Cited, hallucination-free answers over SEC EDGAR filings',
     description:
@@ -50,6 +53,7 @@ export const projects = [
     id: 'swaram',
     group: 'personal',
     image: '/img/project-swaram.webp',
+    ogImage: '/og/swaram.jpg',
     title: 'Swaram',
     tagline: 'Multilingual voice chat application',
     description:
@@ -66,11 +70,12 @@ export const projects = [
     group: 'personal',
     featured: true,
     image: '/img/project-wandr.webp',
+    ogImage: '/og/wandr.jpg',
     title: 'Wandr',
     tagline: 'AI vacation planner: real flights, itineraries, and budgets in one message',
     description:
-      'An AI vacation planner that turns a single message into a full itinerary: real flights via Amadeus, Airbnb pricing, day-by-day plans, and a 3-tier budget breakdown, powered by Claude.',
-    tech: ['Claude', 'Amadeus API', 'Next.js', 'AI'],
+      'An AI vacation planner that turns a single message into a full itinerary: real flights via Google Flights, live Airbnb and hotel pricing, day-by-day plans, and a 3-tier budget breakdown, powered by Claude.',
+    tech: ['Claude', 'SerpApi', 'Tavily', 'FastAPI', 'Next.js'],
     origin: 'Personal Project',
     links: [
       { kind: 'demo', label: 'Live demo', href: 'https://wandr-vacation-planner.vercel.app/' },
@@ -81,6 +86,7 @@ export const projects = [
     id: 'omagent',
     group: 'personal',
     image: '/img/project-omagent.webp',
+    ogImage: '/og/omagent.jpg',
     title: 'OmAgent',
     tagline: "Custom WhatsApp AI agents for businesses that can't afford enterprise tech",
     description:
@@ -123,6 +129,8 @@ export const projects = [
   {
     id: 'dc-airbnb',
     group: 'jhu',
+    image: '/img/project-dc-airbnb.webp',
+    ogImage: '/og/dc-airbnb.jpg',
     title: 'DC Airbnb Analytics',
     tagline: 'Investment intelligence for the DC short-term rental market',
     description:

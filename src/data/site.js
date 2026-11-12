@@ -12,7 +12,7 @@ export const socials = [
   { key: 'x', label: 'X', handle: '@chillybrosriram', href: 'https://x.com/chillybrosriram' },
 ]
 
-// Primary nav. Labels and hash keys are stable: they are bookmarked and shared.
+// Primary nav. Keys map to paths in lib/routes.js.
 export const navLinks = [
   { key: 'experience', label: 'Work' },
   { key: 'education', label: 'Education' },
@@ -48,7 +48,13 @@ export const pageMeta = {
     title: 'Contact | Sriram Naidu Thota',
     description: 'Contact Sriram Naidu Thota for AI systems, product strategy, collaboration, and full-time opportunities.',
   },
+  notfound: {
+    title: 'Page not found | Sriram Naidu Thota',
+    description: 'That page does not exist.',
+  },
 }
+
+export const siteUrl = 'https://sriram369.github.io'
 
 export const now = [
   {
@@ -89,7 +95,7 @@ export const stats = [
     prefix: '~',
     suffix: '%',
     text: 'less time on a form-entry workflow. The AI assistant I built at Nouveau Elevator took it from ~5 minutes to ~30 seconds.',
-    href: '#experience',
+    href: '/work/',
     cta: 'Work',
   },
   {
@@ -120,3 +126,12 @@ export const journey = [
   { city: 'Washington D.C.', note: 'M.S. at Johns Hopkins' },
   { city: 'New York', note: 'SDE at Nouveau Elevator', current: true },
 ]
+
+// "Ask Sri": the site's assistant. The proxy lives on Vercel because GitHub
+// Pages cannot hold a secret key (see api/chat.js).
+export const chat = {
+  endpoint: import.meta.env?.VITE_CHAT_API_URL || 'https://sriram369-github-io.vercel.app/api/chat',
+  suggestions: ['What does Sriram do at Nouveau?', 'Which project should I look at first?', 'What is his background?'],
+  maxMessages: 20,
+  maxLength: 2000,
+}

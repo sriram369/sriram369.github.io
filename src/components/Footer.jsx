@@ -1,6 +1,6 @@
 import { Check, Copy, DownloadSimple } from '@phosphor-icons/react'
 import { profile, socials } from '../data/site'
-import { hrefFor } from '../lib/router'
+import { hrefFor } from '../lib/routes'
 import { useCopy } from '../lib/clipboard'
 import { socialIcons } from '../lib/icons'
 import { Container, Reveal } from './ui'
@@ -76,7 +76,7 @@ export default function Footer({ page }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`${label} (opens in a new tab)`}
-                      className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-sunken hover:text-ink"
+                      className="icon-btn"
                     >
                       <Icon size={19} aria-hidden="true" />
                     </a>

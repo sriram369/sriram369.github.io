@@ -9,10 +9,11 @@ import {
   useSpring,
   useTransform,
 } from 'motion/react'
-import { ArrowRight, ArrowUpRight, DownloadSimple } from '@phosphor-icons/react'
-import { buildWords, journey, now, profile, stack, stats } from '../data/site'
+import { ArrowRight, ArrowUp, ArrowUpRight, DownloadSimple } from '@phosphor-icons/react'
+import { buildWords, chat, journey, now, profile, stack, stats } from '../data/site'
 import { projects } from '../data/projects'
 import { EASE } from '../lib/motion'
+import { hrefFor } from '../lib/routes'
 import { Container, OrgLogo, Reveal, TextLink } from '../components/ui'
 import Magnetic from '../components/Magnetic'
 import Marquee from '../components/Marquee'
@@ -89,13 +90,65 @@ function Portrait({ constraints }) {
         height={1086}
         fetchPriority="high"
         draggable={false}
-        className="relative aspect-[4/5] w-full rounded-panel object-cover object-[50%_42%] shadow-panel"
+        className="relative aspect-[4/5] w-full rounded-panel object-cover object-[50%_42%] shadow-card"
       />
     </motion.div>
   )
 }
 
-function Hero() {
+// The assistant gets a seat in the hero: for someone who builds AI agents, a
+// working one is the most direct proof on the page.
+function AskBox({ onAsk }) {
+  const [draft, setDraft] = useState('')
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.75, ease: EASE }}
+      className="relative z-10 w-full max-w-[460px] lg:absolute lg:top-[124px] lg:left-8"
+    >
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          onAsk(draft.trim())
+          setDraft('')
+        }}
+      >
+        <label htmlFor="hero-ask" className="font-display text-xl font-semibold tracking-[-0.025em] lowercase">
+          Ask my AI about me
+        </label>
+        <div className="mt-3 flex gap-2">
+          <input
+            id="hero-ask"
+            type="text"
+            autoComplete="off"
+            enterKeyHint="send"
+            maxLength={chat.maxLength}
+            placeholder="What has he built?"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            className="field min-w-0 flex-1"
+          />
+          <button type="submit" aria-label="Ask Sri" className="btn btn-primary btn-square">
+            <ArrowUp size={17} weight="bold" aria-hidden="true" />
+          </button>
+        </div>
+      </form>
+      <ul className="mt-3 flex flex-wrap gap-2" aria-label="Suggested questions">
+        {chat.suggestions.slice(0, 2).map((suggestion) => (
+          <li key={suggestion}>
+            <button type="button" onClick={() => onAsk(suggestion)} className="chip chip-button">
+              {suggestion}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  )
+}
+
+function Hero({ onAsk }) {
   const sectionRef = useRef(null)
   const spotX = useMotionValue(0)
   const spotY = useMotionValue(0)
@@ -155,7 +208,7 @@ function Hero() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Magnetic>
-                  <a href="#projects" className="btn btn-primary group">
+                  <a href="/projects/" className="btn btn-primary group">
                     Projects
                     <ArrowRight
                       size={16}
@@ -175,6 +228,8 @@ function Hero() {
             </motion.div>
           </div>
         </div>
+
+        <AskBox onAsk={onAsk} />
       </Container>
     </section>
   )
@@ -221,9 +276,9 @@ function StackBand() {
 
 const statLayout = {
   workflow: 'tone-accent sm:col-span-2 lg:col-span-6 lg:row-span-2',
-  aurapath: 'bg-surface border border-line sm:col-span-2 lg:col-span-6',
+  aurapath: 'bg-surface shadow-card sm:col-span-2 lg:col-span-6',
   community: 'tone-invert lg:col-span-3',
-  openclaw: 'bg-surface border border-line lg:col-span-3',
+  openclaw: 'bg-surface shadow-card lg:col-span-3',
 }
 
 function Numbers() {
@@ -278,7 +333,7 @@ function Numbers() {
 
 /* ---------- Project deck ---------- */
 
-const deckTones = ['bg-surface border border-line', 'tone-accent', 'tone-invert']
+const deckTones = ['bg-surface', 'tone-accent', 'tone-invert']
 
 function DeckCard({ project, index, total, progress }) {
   // Earlier cards shrink a little as later ones slide over them, so the pile reads as depth.
@@ -290,7 +345,7 @@ function DeckCard({ project, index, total, progress }) {
     <div className="stack-card" style={{ '--stack-index': index }}>
       <motion.article
         style={{ scale }}
-        className={`grid origin-top overflow-hidden rounded-panel shadow-panel lg:h-[min(66vh,540px)] lg:grid-cols-2 ${deckTones[index % deckTones.length]}`}
+        className={`grid origin-top overflow-hidden rounded-panel shadow-card lg:h-[min(66vh,540px)] lg:grid-cols-2 ${deckTones[index % deckTones.length]}`}
       >
         <div className="flex flex-col justify-between gap-8 p-6 sm:p-9 lg:p-11">
           <div>
@@ -307,7 +362,7 @@ function DeckCard({ project, index, total, progress }) {
               ))}
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a href={`#projects/${project.id}`} className="btn btn-primary group">
+              <a href={hrefFor('project', project.id)} className="btn btn-primary group">
                 Details
                 <span className="sr-only"> about {project.title}</span>
                 <ArrowRight
@@ -352,7 +407,7 @@ function ProjectDeck() {
         <h2 id="selected-projects" className="text-[clamp(2.25rem,6vw,4.5rem)] font-semibold leading-[0.95] tracking-[-0.045em]">
           Selected projects
         </h2>
-        <a href="#projects" className="link shrink-0 pb-1 text-[0.9375rem] font-medium">
+        <a href="/projects/" className="link shrink-0 pb-1 text-[0.9375rem] font-medium">
           All {projects.length} projects
         </a>
       </Reveal>
@@ -414,10 +469,10 @@ function Journey() {
   )
 }
 
-export default function Home() {
+export default function Home({ onAsk }) {
   return (
     <>
-      <Hero />
+      <Hero onAsk={onAsk} />
       <Now />
       <StackBand />
       <Numbers />

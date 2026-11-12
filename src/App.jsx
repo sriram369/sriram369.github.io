@@ -1,57 +1,63 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import { MotionConfig, motion } from 'motion/react'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
-import CommandPalette from './components/CommandPalette'
 import Home from './pages/Home'
 import Work from './pages/Work'
 import Projects from './pages/Projects'
+import Project from './pages/Project'
 import Education from './pages/Education'
 import Coursework from './pages/Coursework'
 import Certifications from './pages/Certifications'
 import Contact from './pages/Contact'
-// SriChat (the "ask Sri" assistant), About, and Achievements are kept in
-// ./components for later use and are intentionally not mounted.
-import { pageMeta } from './data/site'
-import { useHashRoute } from './lib/router'
+import NotFound from './pages/NotFound'
+import { useRouter } from './lib/router'
 import { useTheme } from './lib/theme'
+import { metaFor } from './lib/meta'
+
+// Overlays are only needed after a click or shortcut, so they load on demand
+// and stay out of the first download.
+const CommandPalette = lazy(() => import('./components/CommandPalette'))
+const AskSri = lazy(() => import('./components/AskSri'))
 
 const pages = {
   home: Home,
   experience: Work,
   projects: Projects,
+  project: Project,
   education: Education,
   coursework: Coursework,
   certifications: Certifications,
   contact: Contact,
+  notfound: NotFound,
 }
 
 const isTyping = (target) =>
   target instanceof HTMLElement && (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName))
 
-export default function App() {
-  const [page, navigate] = useHashRoute()
+// `initialPath` is the URL being pre-rendered at build time or hydrated in the browser.
+export default function App({ initialPath }) {
+  const [route, navigate] = useRouter(initialPath)
   const [theme, toggleTheme] = useTheme()
   const [paletteOpen, setPaletteOpen] = useState(false)
+  // null = closed; a string (possibly empty) = open, seeded with that question.
+  const [askSeed, setAskSeed] = useState(null)
   const firstRender = useRef(true)
 
   useEffect(() => {
-    const meta = pageMeta[page]
-    document.title = meta.title
-    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
-
-    // A hash like "#projects/finrag" targets one card; that page handles its own scroll.
-    const deepLink = window.location.hash.includes('/')
-    if (!deepLink) window.scrollTo({ top: 0, behavior: 'instant' })
-
-    // After a client-side navigation, move focus to the new page heading so
-    // keyboard and screen reader users land on the new content.
     if (firstRender.current) {
       firstRender.current = false
-    } else {
-      requestAnimationFrame(() => document.getElementById('page-title')?.focus({ preventScroll: true }))
+      return
     }
-  }, [page])
+    // After a client-side navigation: sync the tab, start at the top, and move
+    // focus to the new page heading so keyboard and screen reader users land on it.
+    const meta = metaFor(route)
+    document.title = meta.title
+    document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description)
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', meta.url)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    requestAnimationFrame(() => document.getElementById('page-title')?.focus({ preventScroll: true }))
+  }, [route])
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -66,7 +72,8 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  const Page = pages[page]
+  const openAsk = useCallback((question = '') => setAskSeed(question), [])
+  const Page = pages[route.page]
 
   return (
     <MotionConfig reducedMotion="user">
@@ -81,31 +88,29 @@ export default function App() {
         Skip to content
       </a>
 
-      <Nav
-        page={page}
-        navigate={navigate}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        onOpenPalette={() => setPaletteOpen(true)}
-      />
+      <Nav page={route.page} theme={theme} onToggleTheme={toggleTheme} onOpenPalette={() => setPaletteOpen(true)} />
 
       <main id="main" tabIndex={-1} className="min-h-[100dvh] outline-none">
-        {/* Keyed by page so each page fades in fresh and its own entry motion replays. */}
-        <motion.div key={page} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
-          <Page />
+        {/* Keyed by path so each page fades in fresh and its own entry motion replays. */}
+        <motion.div key={route.path} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
+          <Page projectId={route.projectId} onAsk={openAsk} />
         </motion.div>
       </main>
 
-      <Footer page={page} />
+      <Footer page={route.page} />
 
-      {paletteOpen && (
-        <CommandPalette
-          onClose={() => setPaletteOpen(false)}
-          navigate={navigate}
-          theme={theme}
-          toggleTheme={toggleTheme}
-        />
-      )}
+      <Suspense fallback={null}>
+        {paletteOpen && (
+          <CommandPalette
+            onClose={() => setPaletteOpen(false)}
+            navigate={navigate}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            onAsk={openAsk}
+          />
+        )}
+        {askSeed !== null && <AskSri seed={askSeed} onClose={() => setAskSeed(null)} />}
+      </Suspense>
     </MotionConfig>
   )
 }

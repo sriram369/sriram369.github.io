@@ -1,44 +1,43 @@
 import { useCallback, useEffect, useState } from 'react'
-import { pageMeta } from '../data/site'
+import { matchRoute } from './routes'
 
-const pageKeys = Object.keys(pageMeta)
+const isPlainLeftClick = (event) =>
+  event.button === 0 && !event.defaultPrevented && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
 
-function pageFromHash() {
-  const hash = window.location.hash.replace('#', '').toLowerCase().split('/')[0]
-  return pageKeys.includes(hash) ? hash : 'home'
-}
+// Path routing over static files: the build writes real HTML for every route,
+// and after the first load this hook turns same-site link clicks into
+// client-side navigations. `initialPath` is the path being pre-rendered or hydrated.
+export function useRouter(initialPath) {
+  const [route, setRoute] = useState(() => matchRoute(initialPath))
 
-export function hrefFor(page) {
-  return page === 'home' ? '#home' : `#${page}`
-}
-
-// Hash routing: the site is served as static files from GitHub Pages, so every
-// page has to resolve from index.html without server rewrites.
-export function useHashRoute() {
-  const [page, setPage] = useState(pageFromHash)
+  const navigate = useCallback((path) => {
+    const next = matchRoute(path)
+    if (next.path !== window.location.pathname) window.history.pushState(null, '', next.path)
+    setRoute(next)
+  }, [])
 
   useEffect(() => {
-    const sync = () => setPage(pageFromHash())
-    window.addEventListener('hashchange', sync)
-    window.addEventListener('popstate', sync)
+    const onPopState = () => setRoute(matchRoute(window.location.pathname))
+
+    // One listener for the whole document, so plain <a href="/work/"> works everywhere.
+    const onClick = (event) => {
+      if (!isPlainLeftClick(event)) return
+      const anchor = event.target.closest?.('a[href]')
+      if (!anchor || anchor.target || anchor.hasAttribute('download')) return
+      const url = new URL(anchor.href)
+      if (url.origin !== window.location.origin || url.hash) return
+      if (matchRoute(url.pathname).page === 'notfound') return // files such as /Sriram_Resume.pdf
+      event.preventDefault()
+      navigate(url.pathname)
+    }
+
+    window.addEventListener('popstate', onPopState)
+    document.addEventListener('click', onClick)
     return () => {
-      window.removeEventListener('hashchange', sync)
-      window.removeEventListener('popstate', sync)
+      window.removeEventListener('popstate', onPopState)
+      document.removeEventListener('click', onClick)
     }
-  }, [])
+  }, [navigate])
 
-  const navigate = useCallback((next) => {
-    const target = pageKeys.includes(next) ? next : 'home'
-    if (target === 'home') {
-      // Keep the home URL clean instead of leaving a dangling "#home".
-      window.history.pushState(null, '', window.location.pathname + window.location.search)
-      setPage('home')
-    } else if (window.location.hash !== `#${target}`) {
-      window.location.hash = target
-    } else {
-      setPage(target)
-    }
-  }, [])
-
-  return [page, navigate]
+  return [route, navigate]
 }

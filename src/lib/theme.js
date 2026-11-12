@@ -1,14 +1,19 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 
 const STORAGE_KEY = 'theme'
-const media = () => window.matchMedia('(prefers-color-scheme: dark)')
+const EVENT = 'themechange'
 
-function readStored() {
+// index.html sets <html data-theme> from the saved or system preference before
+// first paint. That attribute is the single source of truth; this module only
+// reads it and changes it.
+const getSnapshot = () => document.documentElement.dataset.theme || 'light'
+const getServerSnapshot = () => 'light'
+
+function hasSavedChoice() {
   try {
-    const value = window.localStorage.getItem(STORAGE_KEY)
-    return value === 'light' || value === 'dark' ? value : null
+    return ['light', 'dark'].includes(window.localStorage.getItem(STORAGE_KEY))
   } catch {
-    return null
+    return false
   }
 }
 
@@ -16,37 +21,35 @@ function apply(theme) {
   document.documentElement.dataset.theme = theme
   document
     .querySelector('meta[name="theme-color"]')
-    ?.setAttribute('content', theme === 'dark' ? '#0b0b0d' : '#fafafa')
+    ?.setAttribute('content', theme === 'dark' ? '#0b0b0d' : '#f6f6f7')
+  window.dispatchEvent(new Event(EVENT))
 }
 
-// Follows the system until the visitor picks a side, then remembers the choice.
-// index.html applies the same rule before first paint to avoid a flash.
+function subscribe(onChange) {
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  // Follow the system until the visitor picks a side.
+  const onSystemChange = (event) => {
+    if (!hasSavedChoice()) apply(event.matches ? 'dark' : 'light')
+  }
+  window.addEventListener(EVENT, onChange)
+  media.addEventListener('change', onSystemChange)
+  return () => {
+    window.removeEventListener(EVENT, onChange)
+    media.removeEventListener('change', onSystemChange)
+  }
+}
+
 export function useTheme() {
-  const [theme, setTheme] = useState(() => readStored() ?? (media().matches ? 'dark' : 'light'))
-
-  useEffect(() => {
-    apply(theme)
-  }, [theme])
-
-  useEffect(() => {
-    const mq = media()
-    const onChange = (event) => {
-      if (!readStored()) setTheme(event.matches ? 'dark' : 'light')
-    }
-    mq.addEventListener('change', onChange)
-    return () => mq.removeEventListener('change', onChange)
-  }, [])
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const toggle = useCallback(() => {
-    setTheme((current) => {
-      const next = current === 'dark' ? 'light' : 'dark'
-      try {
-        window.localStorage.setItem(STORAGE_KEY, next)
-      } catch {
-        // Storage can be blocked (private mode). The toggle still works for this visit.
-      }
-      return next
-    })
+    const next = getSnapshot() === 'dark' ? 'light' : 'dark'
+    try {
+      window.localStorage.setItem(STORAGE_KEY, next)
+    } catch {
+      // Storage can be blocked (private mode). The toggle still works for this visit.
+    }
+    apply(next)
   }, [])
 
   return [theme, toggle]

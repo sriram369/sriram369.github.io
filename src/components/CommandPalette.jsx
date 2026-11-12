@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowUpRight,
   BookOpen,
+  ChatCircleDots,
   Briefcase,
   Certificate,
   Copy,
@@ -17,6 +18,7 @@ import {
 import { profile, socials } from '../data/site'
 import { projects } from '../data/projects'
 import { socialIcons } from '../lib/icons'
+import { hrefFor } from '../lib/routes'
 
 const pages = [
   { key: 'home', label: 'Home', icon: House },
@@ -28,7 +30,7 @@ const pages = [
   { key: 'contact', label: 'Contact', icon: EnvelopeSimple, keywords: 'email reach hire' },
 ]
 
-function buildCommands({ navigate, theme, toggleTheme }) {
+function buildCommands({ navigate, theme, toggleTheme, onAsk }) {
   const open = (href) => () => window.open(href, '_blank', 'noopener,noreferrer')
   return [
     ...pages.map(({ key, label, icon, keywords = '' }) => ({
@@ -37,7 +39,7 @@ function buildCommands({ navigate, theme, toggleTheme }) {
       label,
       icon,
       keywords,
-      run: () => navigate(key),
+      run: () => navigate(hrefFor(key)),
     })),
     ...projects.map((project) => ({
       id: `project-${project.id}`,
@@ -46,10 +48,17 @@ function buildCommands({ navigate, theme, toggleTheme }) {
       hint: project.tagline,
       icon: SquaresFour,
       keywords: `${project.tech.join(' ')} ${project.origin}`,
-      run: () => {
-        window.location.hash = `projects/${project.id}`
-      },
+      run: () => navigate(hrefFor('project', project.id)),
     })),
+    {
+      id: 'ask',
+      group: 'Actions',
+      label: 'Ask Sri',
+      hint: "An AI assistant that knows Sriram's work",
+      icon: ChatCircleDots,
+      keywords: 'chat ai assistant question agent',
+      run: () => onAsk(''),
+    },
     {
       id: 'copy-email',
       group: 'Actions',
@@ -93,22 +102,26 @@ function buildCommands({ navigate, theme, toggleTheme }) {
   ]
 }
 
-export default function CommandPalette({ onClose, navigate, theme, toggleTheme }) {
+export default function CommandPalette({ onClose, navigate, theme, toggleTheme, onAsk }) {
   const dialogRef = useRef(null)
   const listRef = useRef(null)
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const commands = useMemo(() => buildCommands({ navigate, theme, toggleTheme }), [navigate, theme, toggleTheme])
+  const commands = useMemo(() => buildCommands({ navigate, theme, toggleTheme, onAsk }), [navigate, theme, toggleTheme, onAsk])
 
   const results = useMemo(() => {
-    const tokens = query.toLowerCase().split(/\s+/).filter(Boolean)
+    const text = query.trim()
+    const tokens = text.toLowerCase().split(/\s+/).filter(Boolean)
     if (!tokens.length) return commands
-    return commands.filter((command) => {
+    const matches = commands.filter((command) => {
       const haystack = `${command.label} ${command.hint ?? ''} ${command.keywords ?? ''} ${command.group}`.toLowerCase()
       return tokens.every((token) => haystack.includes(token))
     })
-  }, [commands, query])
+    // Whatever was typed can always be handed to the assistant as a question.
+    const askTyped = { id: 'ask-typed', group: 'Ask Sri', label: `Ask "${text}"`, icon: ChatCircleDots, run: () => onAsk(text) }
+    return [...matches, askTyped]
+  }, [commands, query, onAsk])
 
   // Mounted only while open. The native dialog gives us the focus trap, Escape
   // handling, and top-layer stacking.
@@ -148,7 +161,7 @@ export default function CommandPalette({ onClose, navigate, theme, toggleTheme }
         // A click that lands on the dialog element itself is a click on the backdrop.
         if (event.target === dialogRef.current) onClose()
       }}
-      className="palette m-auto mt-[12vh] w-[min(600px,calc(100vw-24px))] overflow-hidden rounded-panel border border-line bg-surface p-0 shadow-panel"
+      className="palette overlay m-auto mt-[12vh] w-[min(600px,calc(100vw-24px))] overflow-hidden rounded-panel p-0"
     >
       <div className="flex items-center gap-3 border-b border-line px-4">
         <MagnifyingGlass size={18} aria-hidden="true" className="shrink-0 text-muted" />
@@ -170,15 +183,10 @@ export default function CommandPalette({ onClose, navigate, theme, toggleTheme }
           onKeyDown={onKeyDown}
           className="h-14 min-w-0 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-faint"
         />
-        <kbd className="rounded-md bg-sunken px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted">esc</kbd>
+        <kbd className="kbd">esc</kbd>
       </div>
 
-      <ul id="palette-list" ref={listRef} role="listbox" aria-label="Results" className="max-h-[min(56vh,420px)] overflow-y-auto p-2">
-        {results.length === 0 && (
-          <li role="presentation" className="px-3 py-10 text-center text-sm text-muted">
-            Nothing matches "{query}". Try a page name, a project, or a tool like "RAG".
-          </li>
-        )}
+      <ul id="palette-list" ref={listRef} role="listbox" aria-label="Results" className="flex max-h-[min(56vh,420px)] flex-col gap-0.5 overflow-y-auto overscroll-contain p-2">
         {results.map((command, index) => {
           const Icon = command.icon
           const showGroup = results[index - 1]?.group !== command.group
@@ -192,10 +200,10 @@ export default function CommandPalette({ onClose, navigate, theme, toggleTheme }
                 aria-selected={active}
                 onClick={() => run(command)}
                 onMouseMove={() => setActiveIndex(index)}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 ${active ? 'bg-sunken' : ''}`}
+                className="menu-item"
               >
                 <Icon size={18} aria-hidden="true" className={`shrink-0 ${active ? 'text-ink' : 'text-muted'}`} />
-                <span className="shrink-0 text-[0.9375rem] font-medium">{command.label}</span>
+                <span className={`text-[0.9375rem] font-medium ${command.hint ? 'shrink-0' : 'min-w-0 truncate'}`}>{command.label}</span>
                 {command.hint && <span className="min-w-0 flex-1 truncate text-sm text-muted">{command.hint}</span>}
                 {command.external && <ArrowUpRight size={14} aria-hidden="true" className="ml-auto shrink-0 text-muted" />}
               </div>

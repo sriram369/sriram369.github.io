@@ -24,16 +24,17 @@ export function Reveal({ as = 'div', delay = 0, className, children, ...props })
   )
 }
 
-export function PageHeader({ title, lead, children }) {
+export function PageHeader({ title, lead, eyebrow, children }) {
   return (
     <Container as="header" className="pt-[104px] pb-10 sm:pt-[136px] sm:pb-14">
+      {eyebrow && <p className="meta mb-4">{eyebrow}</p>}
       <motion.h1
         id="page-title"
         tabIndex={-1}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: EASE }}
-        className="text-[clamp(2.75rem,7vw,5rem)] font-semibold leading-none tracking-[-0.04em] outline-none"
+        className="text-[clamp(2.75rem,7vw,5rem)] font-semibold leading-[0.98] tracking-[-0.04em] outline-none"
       >
         {title}
       </motion.h1>

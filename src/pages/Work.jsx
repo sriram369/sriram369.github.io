@@ -58,7 +58,7 @@ function Role({ experience }) {
         {experience.projectLinks && (
           <ul className="mt-6 flex flex-wrap gap-3">
             {experience.projectLinks.map((project) => (
-              <li key={project.name} className="flex items-center gap-1 rounded-full border border-line bg-surface py-1 pr-1 pl-4 text-sm">
+              <li key={project.name} className="flex items-center gap-1 rounded-full bg-[var(--control)] py-1 pr-1 pl-4 text-sm shadow-[var(--shadow-control)]">
                 <span className="mr-1 font-medium">{project.name}</span>
                 <a
                   href={project.demoHref}

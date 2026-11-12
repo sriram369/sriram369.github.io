@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { List, MagnifyingGlass, Moon, Sun, X } from '@phosphor-icons/react'
 import { navLinks, profile } from '../data/site'
-import { hrefFor } from '../lib/router'
+import { hrefFor } from '../lib/routes'
 import { EASE } from '../lib/motion'
 
-const iconButton =
-  'inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-sunken hover:text-ink'
+const iconButton = 'icon-btn'
 
-export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalette }) {
+// Links are plain anchors; the router turns same-site clicks into client-side navigations.
+export default function Nav({ page, theme, onToggleTheme, onOpenPalette }) {
   // The menu remembers which page it was opened on, so any navigation
   // (including back/forward) closes it without extra bookkeeping.
   const [openedOn, setOpenedOn] = useState(null)
   const menuOpen = openedOn === page
-  const setMenuOpen = (next) => setOpenedOn(next ? page : null)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -24,24 +23,16 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
 
-  const go = (key) => (event) => {
-    // Let modified clicks (new tab, etc.) behave natively.
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-    event.preventDefault()
-    navigate(key)
-    setMenuOpen(false)
-  }
-
   const links = [...navLinks, { key: 'contact', label: 'Contact' }]
-  // Coursework and Certifications hang off Education, so it stays lit on those pages.
-  const section = ['coursework', 'certifications'].includes(page) ? 'education' : page
+  // Sub-pages keep their parent lit: Coursework and Certifications under Education, a project under Projects.
+  const parents = { coursework: 'education', certifications: 'education', project: 'projects' }
+  const section = parents[page] ?? page
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-4 px-5 sm:px-8">
         <a
           href={hrefFor('home')}
-          onClick={go('home')}
           className="font-display text-[1.0625rem] font-semibold tracking-[-0.02em] whitespace-nowrap"
         >
           {profile.name}
@@ -55,7 +46,6 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
                 <a
                   key={key}
                   href={hrefFor(key)}
-                  onClick={go(key)}
                   aria-current={page === key ? 'page' : undefined}
                   className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
                     active ? 'text-ink' : 'text-muted hover:text-ink'
@@ -65,7 +55,7 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
                     <motion.span
                       layoutId="nav-active"
                       className="absolute inset-0 rounded-full bg-sunken"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                      transition={{ type: 'spring', bounce: 0.12, duration: 0.4 }}
                     />
                   )}
                   <span className="relative">{label}</span>
@@ -78,11 +68,11 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
             type="button"
             onClick={onOpenPalette}
             aria-keyshortcuts="Meta+K Control+K"
-            className="hidden h-10 items-center gap-2 rounded-full border border-line bg-surface pr-2 pl-3 text-sm text-muted transition-colors hover:border-ink hover:text-ink md:inline-flex"
+            className="btn btn-ghost btn-sm hidden gap-2 pr-2.5 pl-3 font-normal text-muted md:inline-flex"
           >
             <MagnifyingGlass size={15} aria-hidden="true" />
             <span>Search</span>
-            <kbd aria-hidden="true" className="rounded-md bg-sunken px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted">⌘K</kbd>
+            <kbd aria-hidden="true" className="kbd">⌘K</kbd>
           </button>
           <button type="button" onClick={onOpenPalette} aria-label="Search the site" className={`${iconButton} md:hidden`}>
             <MagnifyingGlass size={19} aria-hidden="true" />
@@ -99,7 +89,7 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
 
           <button
             type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setOpenedOn(menuOpen ? null : page)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -126,13 +116,12 @@ export default function Nav({ page, navigate, theme, onToggleTheme, onOpenPalett
                 <li key={key}>
                   <a
                     href={hrefFor(key)}
-                    onClick={go(key)}
-                    aria-current={page === key ? 'page' : undefined}
+                      aria-current={page === key ? 'page' : undefined}
                     className={`flex h-12 items-center font-display text-xl font-medium tracking-[-0.02em] ${
                       page === key ? 'text-ink' : 'text-muted'
                     }`}
                   >
-                    <span className={page === key ? 'mark' : ''}>{label}</span>
+                    {label}
                   </a>
                 </li>
               ))}
